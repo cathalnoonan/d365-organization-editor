@@ -1,0 +1,77 @@
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <script src="../../ClientGlobalContext.js.aspx" type="text/javascript"></script>
+  <link rel="stylesheet" href="../library/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+
+<body onload="OrganizationEditor.onLoad()">
+  <main role="main">
+
+    <div class="container">
+      <table class="table">
+        <thead>
+          <tr>
+            <th id="th-displayname">Display Name</th>
+            <th id="th-description">Description</th>
+            <th id="th-logicalname">Logical Name</th>
+            <th id="th-datatype">Data Type</th>
+            <th td="th-action">Action</th>
+          </tr>
+        </thead>
+        <tbody id="tbody">
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+
+  <div class="modal fade" id="modal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title" id="modal-title"></h4>
+          <button type="button" class="close" data-dismiss="modal">×</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body" id="modal-body">
+          <div class="form-group">
+            <b>Description</b>
+            <p id="description"></p>
+          </div>
+          <div class="form-group">
+            <b>Data Type</b>
+            <p id="type"></p>
+          </div>
+          <div class="form-group">
+            <b>Value</b>
+            <div id="input-container"></div>
+          </div>
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-success" data-dismiss="modal" id="btn-modal-save">Save</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Library scripts -->
+  <script src="../library/jquery/jquery-3.2.1.slim.min.js"></script>
+  <script src="../library/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="../library/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <script src="../library/bluebird/3.7.0/bluebird.core.min.js"></script>
+  <script src="../library/fetch/3.0.0/fetch.min.js"></script>
+
+  <script src="../scripts/organizationeditor_xrm.js"></script>
+  <script src="../scripts/organizationeditor.js"></script>
+</body>
+
+</html>

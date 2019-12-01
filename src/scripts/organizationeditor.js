@@ -6,10 +6,9 @@ var OrganizationEditor = (function (_public) {
   var _entity = {};
   var _attributeMetadata = {};
   var _metadata = {};
-  var _updateData = {};
 
   function onLoad() {
-    showProgressIndicator("Loading ...")
+    showProgressIndicator("Loading ...");
 
     Promise.all([
         OrganizationEditor.Xrm.getEntityMetadata('organization').then(setMetadata),
@@ -94,8 +93,7 @@ var OrganizationEditor = (function (_public) {
     if (logicalName) {
       var attributeMetadata = _attributeMetadata[logicalName];
       var value = _entity[logicalName];
-
-      var modal = buildModal(attributeMetadata, value);
+      buildModal(attributeMetadata, value);
     }
   }
 
@@ -106,7 +104,7 @@ var OrganizationEditor = (function (_public) {
 
     // Set title
     var modalTitle = document.getElementById('modal-title');
-    modalTitle.innerText = attributeMetadata.DisplayName.UserLocalizedLabel.Label
+    modalTitle.innerText = attributeMetadata.DisplayName.UserLocalizedLabel.Label;
 
     // Prepare content
     var description = document.getElementById('description');
@@ -114,12 +112,12 @@ var OrganizationEditor = (function (_public) {
     var type = document.getElementById('type');
     type.innerText = attributeMetadata.AttributeType;
     var inputContainer = document.getElementById('input-container');
-    inputContainer.innerHTML = null;
+    inputContainer.innerHTML = '';
     var input = createInputElement(attributeMetadata, value);
     inputContainer.appendChild(input);
 
     // Wire up the onclick of the Save button
-    var modalSave = document.getElementById('btn-modal-save')
+    var modalSave = document.getElementById('btn-modal-save');
     modalSave.onclick = onModalSaveClick;
   }
 
@@ -183,7 +181,7 @@ var OrganizationEditor = (function (_public) {
           onInputChanged(evt, attributeMetadata);
         };
         textarea.className = "form-control";
-        textarea.value = value;
+        textarea.value = value || '';
         return textarea;
     }
 
@@ -274,6 +272,14 @@ var OrganizationEditor = (function (_public) {
     return Xrm.Utility.showProgressIndicator(message);
   }
 
+  function getLocals() {
+    return {
+      entity: _entity,
+      attributeMetadata: _attributeMetadata,
+      metadata: _metadata
+    };
+  }
+
   // Polyfills
   if (!Array.prototype.forEach) {
     Array.prototype.forEach = function (fn, scope) {
@@ -285,13 +291,7 @@ var OrganizationEditor = (function (_public) {
 
   // Public
   _public.onLoad = onLoad;
-  _public.getLocals = function () {
-    return {
-      entity: _entity,
-      attributeMetadata: _attributeMetadata,
-      metadata: _metadata
-    };
-  }
+  _public.getLocals = getLocals;
   return _public;
 
 }(OrganizationEditor || {}));

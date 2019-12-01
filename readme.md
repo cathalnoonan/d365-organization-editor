@@ -25,7 +25,8 @@ Fields that cannot be updated will not be shown
 ## Browser compatibilty / Known issues
 Tested in:
 - Chrome
+  - No known issues
 - Firefox
+  - No known issues
 - Edge
-  - Edge has an issue where the text "null" is appearing above the input
-  <img src="./img/edge-null-error.png">
+  - No known issues

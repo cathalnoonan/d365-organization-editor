@@ -96,6 +96,38 @@ OrganizationEditor.Xrm = (function (_public) {
     });
   }
 
+  function getBooleanOptions(entityName, metadataId) {
+    return new Promise(function (resolve, reject) {
+      var url = getApiDataUrl() + "/EntityDefinitions(LogicalName='" + entityName + "')/Attributes(" + metadataId + ")/Microsoft.Dynamics.CRM.BooleanAttributeMetadata?$select=LogicalName&$expand=OptionSet,GlobalOptionSet";
+
+      fetch(url)
+        .then(function (response) {
+          if (response.ok) {
+            return response
+          } else {
+            reject({ message: response.statusText });
+          }
+        })
+        .then(function (response) {
+          response.json()
+            .then(function (json) {
+              if (json.OptionSet && json.OptionSet.Options && json.OptionSet.Options.length > 0) {
+                resolve([
+                  json.OptionSet.TrueOption,
+                  json.OptionSet.FalseOption
+                ]);
+              } else {
+                resolve([
+                  json.GlobalOptionSet.TrueOption,
+                  json.GlobalOptionSet.FalseOption
+                ]);
+              }
+            })
+            .catch(reject);
+        })
+    });
+  }
+
   function retrieveMultipleRecords(entityLogicalName, options) {
     return new Promise(function (resolve, reject) {
       getEntitySetName(entityLogicalName)
@@ -184,6 +216,7 @@ OrganizationEditor.Xrm = (function (_public) {
   _public.openAlertDialog = openAlertDialog;
   _public.openErrorDialog = openErrorDialog;
   _public.getPicklistOptions = getPicklistOptions;
+  _public.getBooleanOptions = getBooleanOptions;
   return _public;
 
 } (OrganizationEditor.Xrm || {}));

@@ -1,7 +1,6 @@
 /// <reference path="./organizationeditor_xrm.js"/>
 
-var OrganizationEditor = OrganizationEditor || {};
-(function (_public) {
+var OrganizationEditor = (function (_public) {
 
   // Private
   var _entity = {};
@@ -130,18 +129,24 @@ var OrganizationEditor = OrganizationEditor || {};
       case "Boolean":
         var select = document.createElement('select');
         select.className = "form-control";
-        var option_true = document.createElement('option');
-        option_true.text = "True";
-        option_true.value = "true";
-        select.appendChild(option_true);
-        var option_false = document.createElement('option');
-        option_false.text = "False";
-        option_false.value = "false";
-        select.appendChild(option_false);
-        select.value = value.toString();
-        select.onchange = function (evt) {
-          onInputChanged(evt, attributeMetadata);
-        }
+        OrganizationEditor.Xrm.getBooleanOptions('organization', attributeMetadata.MetadataId)
+          .then(function (options) {
+            for (var i = 0; i < options.length; i++) {
+              var option = document.createElement('option');
+              option.text = options[i].Label.UserLocalizedLabel.Label;
+              option.value = options[i].Value;
+              select.appendChild(option);
+            }
+            if (value === 1 || value === '1' || value === true || value.toString() === 'true') {
+              select.value = '1';
+            } else if (value === 0 || value === '0' || value === false || value.toString() === 'false') {
+              select.value = '0';
+            }
+            select.onchange = function (evt) {
+              onInputChanged(evt, attributeMetadata);
+            }
+          })
+          .catch(OrganizationEditor.Xrm.openErrorDialog);
         return select;
 
       case "Integer":
@@ -187,18 +192,15 @@ var OrganizationEditor = OrganizationEditor || {};
 
   function onInputChanged(evt, attributeMetadata) {
     var input = evt.target;
-
     var entity = OrganizationEditor.getLocals().entity;
-
     var value = parseValue(input.value, attributeMetadata);
-
     entity[attributeMetadata.LogicalName] = value;
   }
 
   function parseValue(value, attributeMetadata) {
     switch (attributeMetadata.AttributeType) {
       case "Boolean":
-        return value === 'true';
+        return value === 'true' || value === 1 || value === '1';
 
       case "Integer":
         return parseInt(value);
@@ -292,4 +294,4 @@ var OrganizationEditor = OrganizationEditor || {};
   }
   return _public;
 
-}(OrganizationEditor));
+}(OrganizationEditor || {}));

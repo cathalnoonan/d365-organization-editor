@@ -23,7 +23,7 @@ Fields that cannot be updated will not be shown
 <img src="./img/sample-2.png">
 
 ## Bugs
-- Lookup type is always showing the value as `undefined`
+- Lookup type doesn't seem to work
 
 ## Browser compatibilty / Known issues
 Tested in:

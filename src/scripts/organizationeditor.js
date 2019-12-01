@@ -92,7 +92,7 @@ var OrganizationEditor = (function (_public) {
     var logicalName = evt.target.getAttribute('data-logicalname');
     if (logicalName) {
       var attributeMetadata = _attributeMetadata[logicalName];
-      var value = _entity[logicalName];
+      var value = _entity[logicalName] || _entity["_" + logicalName + "_value"];
       buildModal(attributeMetadata, value);
     }
   }
@@ -101,6 +101,7 @@ var OrganizationEditor = (function (_public) {
     // Set logical name
     var modal = document.getElementById('modal');
     modal.setAttribute('data-logicalname', attributeMetadata.LogicalName);
+    modal.setAttribute('data-attributetype', attributeMetadata.AttributeType);
 
     // Set title
     var modalTitle = document.getElementById('modal-title');
@@ -152,6 +153,9 @@ var OrganizationEditor = (function (_public) {
         input.type = "number";
         input.className = "form-control";
         input.value = value;
+        input.onchange = function (ev) {
+          onInputChanged(ev, attributeMetadata);
+        }
         return input;
 
       case "Picklist":
@@ -173,7 +177,33 @@ var OrganizationEditor = (function (_public) {
           .catch(OrganizationEditor.Xrm.openErrorDialog);
         return select;
 
-        //case "String":
+      case "Lookup":
+        var div = document.createElement('div');
+        
+        var inputId = document.createElement('input');
+        inputId.id = 'input-id';
+        inputId.style.display = 'inline-block';
+        inputId.className = 'form-control col-6';
+        inputId.value = value;
+        div.appendChild(inputId);
+        
+        var selectLogicalName = document.createElement('select');
+        selectLogicalName.id = 'select-logicalname';
+        selectLogicalName.style.display = 'inline-block';
+        selectLogicalName.className = 'form-control col-6';
+        attributeMetadata.Targets.forEach(function (element) {
+          var option = document.createElement('option');
+          option.text = element;
+          option.value = element;
+          selectLogicalName.appendChild(option);
+        });
+        div.appendChild(selectLogicalName);
+        
+        inputId.onchange = function (ev) {
+          onLookupChanged(attributeMetadata);
+        }
+        return div;
+
       default:
         var textarea = document.createElement('textarea');
         textarea.setAttribute('rows', '4');
@@ -195,6 +225,24 @@ var OrganizationEditor = (function (_public) {
     entity[attributeMetadata.LogicalName] = value;
   }
 
+  function onLookupChanged(attributeMetadata) {
+    var inputId = document.getElementById('input-id');
+    var selectLogicalName = document.getElementById('select-logicalname');
+    var entity = OrganizationEditor.getLocals().entity;
+    var id = inputId.value;
+    var logicalName = selectLogicalName.value;
+    if (!id || id === '' || !logicalName || logicalName === '') {
+      entity[attributeMetadata.LogicalName] = null;
+    } else {
+      OrganizationEditor.Xrm.getEntitySetName(logicalName)
+        .then(function (entitySetName) {
+          entity[attributeMetadata.LogicalName] = id;
+          entity[attributeMetadata.LogicalName + "@odata.bind"] = "/" + entitySetName + "(" + id + ")";
+        })
+        .catch();
+    }
+  }
+
   function parseValue(value, attributeMetadata) {
     switch (attributeMetadata.AttributeType) {
       case "Boolean":
@@ -214,9 +262,15 @@ var OrganizationEditor = (function (_public) {
 
     var modal = document.getElementById('modal');
     var logicalName = modal.getAttribute('data-logicalname');
+    var attributeType = modal.getAttribute('data-attributetype');
 
     var data = {};
-    data[logicalName] = _entity[logicalName];
+    if (attributeType && attributeType === 'Lookup' && _entity[logicalName]) {
+      logicalName = logicalName + "@odata.bind";
+      data[logicalName] = _entity[logicalName];
+    } else {
+      data[logicalName] = _entity[logicalName];
+    }
 
     OrganizationEditor.Xrm.updateRecord('organization', _entity.organizationid, data)
       .then(closeProgressIndicator)

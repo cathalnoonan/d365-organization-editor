@@ -217,6 +217,7 @@ OrganizationEditor.Xrm = (function (_public) {
   _public.openErrorDialog = openErrorDialog;
   _public.getPicklistOptions = getPicklistOptions;
   _public.getBooleanOptions = getBooleanOptions;
+  _public.getEntitySetName = getEntitySetName;
   return _public;
 
 } (OrganizationEditor.Xrm || {}));

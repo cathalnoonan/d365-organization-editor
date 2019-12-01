@@ -1,6 +1,10 @@
 # D365 Organization Editor
 Enables access to update the fields in the Organization entity without writing a console app
 
+The fields shown in the editor are retrieved from the metadata, so any fields that are added to the Organization entity will be shown
+
+Fields that cannot be updated will not be shown
+
 <img src="./img/root.png">
 
 ## Caution

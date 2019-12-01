@@ -28,8 +28,8 @@ Fields that cannot be updated will not be shown
 ## Browser compatibilty / Known issues
 Tested in:
 - Chrome
-  - No known issues
+  - No specific issues
 - Firefox
-  - No known issues
+  - No specific issues
 - Edge
-  - No known issues
+  - No specific issues

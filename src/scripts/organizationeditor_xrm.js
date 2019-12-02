@@ -23,20 +23,10 @@ OrganizationEditor.Xrm = (function (_public) {
     return new Promise(function (resolve, reject) {
       var url = getApiDataUrl() + "/EntityDefinitions(LogicalName='" + entityName + "')?$expand=Attributes";
 
-      fetch(url)
+      axios.get(url)
         .then(function (response) {
-          if (response.ok) {
-            return response
-          } else {
-            reject({ message: response.statusText });
-          }
-        })
-        .then(function (response) {
-          response.json()
-            .then(function (json) {
-              resolve(json);
-            })
-            .catch(reject);
+          var json = response.data;
+          resolve(json);
         })
         .catch(reject);
     });
@@ -51,22 +41,13 @@ OrganizationEditor.Xrm = (function (_public) {
         return;
       }
 
-      fetch(url)
+      axios.get(url)
         .then(function (response) {
-          if (response.ok) {
-            return response
-          } else {
-            reject({ message: response.statusText });
-          }
+          var json = response.data;
+          _entitySets[entityName] = json.EntitySetName;
+          resolve(_entitySets[entityName]);
         })
-        .then(function (response) {
-          response.json()
-            .then(function (json) {
-              _entitySets[entityName] = json.EntitySetName;
-              resolve(_entitySets[entityName]);
-            })
-            .catch(reject);
-        })
+        .catch(reject);
     });
   }
 
@@ -74,25 +55,16 @@ OrganizationEditor.Xrm = (function (_public) {
     return new Promise(function (resolve, reject) {
       var url = getApiDataUrl() + "/EntityDefinitions(LogicalName='" + entityName + "')/Attributes(" + metadataId + ")/Microsoft.Dynamics.CRM.PicklistAttributeMetadata?$select=LogicalName&$expand=OptionSet,GlobalOptionSet";
 
-      fetch(url)
+      axios.get(url)
         .then(function (response) {
-          if (response.ok) {
-            return response
+          var json = response.data;
+          if (json.OptionSet && json.OptionSet.Options && json.OptionSet.Options.length > 0) {
+            resolve(json.OptionSet.Options);
           } else {
-            reject({ message: response.statusText });
-          }
+            resolve(json.GlobalOptionSet.Options);
+          }  
         })
-        .then(function (response) {
-          response.json()
-            .then(function (json) {
-              if (json.OptionSet && json.OptionSet.Options && json.OptionSet.Options.length > 0) {
-                resolve(json.OptionSet.Options);
-              } else {
-                resolve(json.GlobalOptionSet.Options);
-              }
-            })
-            .catch(reject);
-        })
+        .catch(reject);
     });
   }
 
@@ -100,31 +72,22 @@ OrganizationEditor.Xrm = (function (_public) {
     return new Promise(function (resolve, reject) {
       var url = getApiDataUrl() + "/EntityDefinitions(LogicalName='" + entityName + "')/Attributes(" + metadataId + ")/Microsoft.Dynamics.CRM.BooleanAttributeMetadata?$select=LogicalName&$expand=OptionSet,GlobalOptionSet";
 
-      fetch(url)
+      axios.get(url)
         .then(function (response) {
-          if (response.ok) {
-            return response
+          var json = response.data;
+          if (json.OptionSet && json.OptionSet.Options && json.OptionSet.Options.length > 0) {
+            resolve([
+              json.OptionSet.TrueOption,
+              json.OptionSet.FalseOption
+            ]);
           } else {
-            reject({ message: response.statusText });
-          }
+            resolve([
+              json.GlobalOptionSet.TrueOption,
+              json.GlobalOptionSet.FalseOption
+            ]);
+          }  
         })
-        .then(function (response) {
-          response.json()
-            .then(function (json) {
-              if (json.OptionSet && json.OptionSet.Options && json.OptionSet.Options.length > 0) {
-                resolve([
-                  json.OptionSet.TrueOption,
-                  json.OptionSet.FalseOption
-                ]);
-              } else {
-                resolve([
-                  json.GlobalOptionSet.TrueOption,
-                  json.GlobalOptionSet.FalseOption
-                ]);
-              }
-            })
-            .catch(reject);
-        })
+        .catch(reject);
     });
   }
 
@@ -138,11 +101,10 @@ OrganizationEditor.Xrm = (function (_public) {
           }
           return url;
         })
-        .then(fetch)
+        .then(axios.get)
         .then(function (response) {
-          return response.json();
+          resolve(response.data);
         })
-        .then(resolve)
         .catch(reject);
     });
   }
@@ -173,9 +135,9 @@ OrganizationEditor.Xrm = (function (_public) {
           if (!data[primaryIdAttribute]) {
             data[primaryIdAttribute] = id;
           }
-          return fetch(url, {
+          return axios(url, {
             method: 'PATCH',
-            body: JSON.stringify(data),
+            data: data,
             headers: {
               "OData-MaxVersion": "4.0",
               "OData-Version": "4.0",
@@ -185,15 +147,20 @@ OrganizationEditor.Xrm = (function (_public) {
           })
         })
         .then(function (response) {
-          if (response.ok) {
+          var success = isSuccess(response);
+          if (success) {
             resolve(response);
           } else {
-            response.json().then(function (error) {
-              reject(error.error);
-            });
+            reject({ message: response.statusText });
           }
         });
     });
+  }
+
+  function isSuccess(response) {
+    // Axios:
+    var statusCode = response.status;
+    return statusCode >= 200 && statusCode < 300;
   }
 
   function openAlertDialog(options) {

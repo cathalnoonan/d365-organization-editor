@@ -130,16 +130,22 @@ var OrganizationEditor = (function (_public) {
         select.className = "form-control";
         OrganizationEditor.Xrm.getBooleanOptions('organization', attributeMetadata.MetadataId)
           .then(function (options) {
+            var emptyOption = document.createElement('option');
+            emptyOption.text = '-- Select --';
+            emptyOption.value = '';
+            select.appendChild(emptyOption);
             for (var i = 0; i < options.length; i++) {
               var option = document.createElement('option');
               option.text = options[i].Label.UserLocalizedLabel.Label;
               option.value = options[i].Value;
               select.appendChild(option);
             }
-            if (value === 1 || value === '1' || value === true || value.toString() === 'true') {
-              select.value = '1';
-            } else if (value === 0 || value === '0' || value === false || value.toString() === 'false') {
-              select.value = '0';
+            if (value !== undefined) {
+              if (value === 1 || value === '1' || value === true || value.toString() === 'true') {
+                select.value = '1';
+              } else if (value === 0 || value === '0' || value === false || value.toString() === 'false') {
+                select.value = '0';
+              }
             }
             select.onchange = function (evt) {
               onInputChanged(evt, attributeMetadata);
@@ -163,13 +169,19 @@ var OrganizationEditor = (function (_public) {
         select.className = "form-control";
         OrganizationEditor.Xrm.getPicklistOptions('organization', attributeMetadata.MetadataId)
           .then(function (options) {
+            var emptyOption = document.createElement('option');
+            emptyOption.text = '-- Select --';
+            emptyOption.value = '';
+            select.appendChild(emptyOption);
             for (var i = 0; i < options.length; i++) {
               var option = document.createElement('option');
               option.text = options[i].Label.UserLocalizedLabel.Label;
               option.value = options[i].Value;
               select.appendChild(option);
             }
-            select.value = value.toString();
+            if (value !== undefined) {
+              select.value = value.toString();
+            }
             select.onchange = function (evt) {
               onInputChanged(evt, attributeMetadata);
             }
@@ -246,7 +258,16 @@ var OrganizationEditor = (function (_public) {
   function parseValue(value, attributeMetadata) {
     switch (attributeMetadata.AttributeType) {
       case "Boolean":
+        if (value === undefined || value === null || value === '') {
+          return null;
+        }
         return value === 'true' || value === 1 || value === '1';
+
+      case "Picklist":
+        if (value === undefined || value === null || value === '') {
+          return null;
+        }
+        return value;
 
       case "Integer":
         return parseInt(value);

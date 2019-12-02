@@ -92,7 +92,12 @@ var OrganizationEditor = (function (_public) {
     var logicalName = evt.target.getAttribute('data-logicalname');
     if (logicalName) {
       var attributeMetadata = _attributeMetadata[logicalName];
-      var value = _entity[logicalName] || _entity["_" + logicalName + "_value"];
+      var value = undefined;
+      if (_entity[logicalName] !== undefined) {
+        value = _entity[logicalName]
+      } else if (_entity["_" + logicalName + "_value"] !== undefined) {
+        value = _entity["_" + logicalName + "_value"]
+      }
       buildModal(attributeMetadata, value);
     }
   }
@@ -363,6 +368,16 @@ var OrganizationEditor = (function (_public) {
       }
     }
   }
+  if (!Object.entries)
+  Object.entries = function( obj ){
+    var ownProps = Object.keys( obj ),
+        i = ownProps.length,
+        resArray = new Array(i); // preallocate the Array
+    while (i--)
+      resArray[i] = [ownProps[i], obj[ownProps[i]]];
+
+    return resArray;
+  };
 
   // Public
   _public.onLoad = onLoad;

@@ -33,3 +33,5 @@ Tested in:
   - No specific issues
 - Edge
   - No specific issues
+- IE 11
+  - No specific issues

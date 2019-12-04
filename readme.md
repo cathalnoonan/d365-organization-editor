@@ -1,21 +1,27 @@
 # D365 Organization Editor
-Enables access to update the fields in the Organization entity without writing a console app
+Dynamics 365 stores configuration values for the envrionment in the `Organization` entity. These fields are updated when changes are made in the `System > Administration > System Settings` window, although not all settings are present here
 
-The fields shown in the editor are retrieved from the metadata, so any fields that are added to the Organization entity will be shown
+Examples of fields that are not available in the System Settings are:
+- <u>IsFolderAutoCreatedonSP</u>: Select whether folders should be automatically created on SharePoint.
+- <u>AllowLegacyClientExperience</u>: Enable access to legacy web client UI
 
-Fields that cannot be updated will not be shown
+This solution provides a way to update the fields in the organization entity without writing a console app
+
+The fields shown in the editor are retrieved from the metadata, so any fields that are added to the organization entity will be shown
+
+Some fields cannot be directly edited, and these fields will not be shown, for example `CreatedOn`
 
 <img src="./img/root.png">
 
 ## Caution
-<b>Changing some of these values could break something, so be careful not to break your Dynamics</b>
-
-<b>Set the values at your own risk</b>
+<b>Changing some of these values could break something, so be careful not to break your Dynamics 😃</b>
+(Set the values at your own risk)
 
 ## Installation / Usage
-- Install the managed solution to the environment
-- Open the solution and the webresource will be under the `Configuration` section
-- Search for the value to update using CTRL+F, click the `Edit` button
+- Download the solution from the <a href="https://github.com/cathalnoonan/d365-organization-editor/releases">Releases page</a>
+- Install the solution to the environment
+- Open the solution and the webresource will be open under the `Configuration` section
+- Search for the field to update using CTRL+F, click the `Edit` button
 - Update the value and click `Save`
 - Changing some values require `Publish All Customizations` to reflect 
 
@@ -23,7 +29,7 @@ Fields that cannot be updated will not be shown
 <img src="./img/sample-2.png">
 
 ## Bugs
-- Lookup type doesn't seem to work
+- Lookup values doesn't seem to be updating
 
 ## Browser compatibilty / Known issues
 Tested in:

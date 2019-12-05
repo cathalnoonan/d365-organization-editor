@@ -8,14 +8,14 @@ var OrganizationEditor = (function (_public) {
   var _metadata = {};
 
   function onLoad() {
-    showProgressIndicator("Loading ...");
+    OrganizationEditor.Xrm.showProgressIndicator("Loading ...");
 
     Promise.all([
-        OrganizationEditor.Xrm.getEntityMetadata('organization').then(setMetadata),
-        OrganizationEditor.Xrm.retrieveFirst('organization').then(setEntity)
+        OrganizationEditor.Xrm.getEntityMetadata("organization").then(setMetadata),
+        OrganizationEditor.Xrm.retrieveFirst("organization").then(setEntity)
       ])
       .then(buildTable)
-      .then(closeProgressIndicator)
+      .then(OrganizationEditor.Xrm.closeProgressIndicator)
       .catch(OrganizationEditor.Xrm.openErrorDialog);
   }
 
@@ -28,10 +28,7 @@ var OrganizationEditor = (function (_public) {
 
     Object.entries(_metadata.Attributes).forEach(function (entry) {
       var attribute = entry[1];
-      if (!attribute.IsValidForUpdate) {
-        return;
-      }
-      if (attribute.AttributeType === 'Virtual') {
+      if (!attribute.IsValidForUpdate || attribute.AttributeType === "Virtual") {
         return;
       }
       _attributeMetadata[attribute.LogicalName] = attribute;
@@ -39,7 +36,7 @@ var OrganizationEditor = (function (_public) {
   }
 
   function buildTable() {
-    const tbody = document.getElementById('tbody');
+    const tbody = document.getElementById("tbody");
 
     Object.entries(_attributeMetadata).sort(function (a, b) {
       if (a[0] < b[0]) {
@@ -54,42 +51,42 @@ var OrganizationEditor = (function (_public) {
     }).forEach(function (entry) {
       var attribute = mapMetadataAttribute(entry[1]);
 
-      var tr = document.createElement('tr');
-      tr.setAttribute('data-metadataid', attribute.metadataId);
-      tr.setAttribute('data-logicalname', attribute.logicalName);
+      var tr = document.createElement("tr");
+      tr.setAttribute("data-metadataid", attribute.metadataId);
+      tr.setAttribute("data-logicalname", attribute.logicalName);
       tbody.appendChild(tr);
 
-      var tdDisplayName = document.createElement('td');
+      var tdDisplayName = document.createElement("td");
       tdDisplayName.innerText = attribute.displayName;
       tr.appendChild(tdDisplayName);
 
-      var tdDescription = document.createElement('td');
+      var tdDescription = document.createElement("td");
       tdDescription.innerText = attribute.description;
       tr.appendChild(tdDescription);
 
-      var tdLogicalName = document.createElement('td');
+      var tdLogicalName = document.createElement("td");
       tdLogicalName.innerText = attribute.logicalName;
       tr.appendChild(tdLogicalName);
 
-      var tdDataType = document.createElement('td');
+      var tdDataType = document.createElement("td");
       tdDataType.innerText = attribute.type;
       tr.appendChild(tdDataType);
 
-      var tdEdit = document.createElement('td');
-      var btnEdit = document.createElement('button');
-      btnEdit.innerText = 'Edit';
-      btnEdit.className = 'btn btn-info btn-small';
+      var tdEdit = document.createElement("td");
+      var btnEdit = document.createElement("button");
+      btnEdit.innerText = "Edit";
+      btnEdit.className = "btn btn-info btn-small";
       btnEdit.onclick = editOnClick;
-      btnEdit.setAttribute('data-toggle', 'modal');
-      btnEdit.setAttribute('data-target', '#modal');
-      btnEdit.setAttribute('data-logicalname', attribute.logicalName);
+      btnEdit.setAttribute("data-toggle", "modal");
+      btnEdit.setAttribute("data-target", "#modal");
+      btnEdit.setAttribute("data-logicalname", attribute.logicalName);
       tdEdit.appendChild(btnEdit);
       tr.appendChild(tdEdit);
     });
   }
 
   function editOnClick(evt) {
-    var logicalName = evt.target.getAttribute('data-logicalname');
+    var logicalName = evt.target.getAttribute("data-logicalname");
     if (logicalName) {
       var attributeMetadata = _attributeMetadata[logicalName];
       var value = undefined;
@@ -103,53 +100,54 @@ var OrganizationEditor = (function (_public) {
   }
 
   function buildModal(attributeMetadata, value) {
-    // Set logical name
-    var modal = document.getElementById('modal');
-    modal.setAttribute('data-logicalname', attributeMetadata.LogicalName);
-    modal.setAttribute('data-attributetype', attributeMetadata.AttributeType);
+    // Set logical name attribute
+    var modal = document.getElementById("modal");
+    modal.setAttribute("data-logicalname", attributeMetadata.LogicalName);
+    modal.setAttribute("data-attributetype", attributeMetadata.AttributeType);
 
     // Set title
-    var modalTitle = document.getElementById('modal-title');
+    var modalTitle = document.getElementById("modal-title");
     modalTitle.innerText = attributeMetadata.DisplayName.UserLocalizedLabel.Label;
 
     // Prepare content
-    var description = document.getElementById('description');
+    var description = document.getElementById("description");
     description.innerText = attributeMetadata.Description.UserLocalizedLabel.Label;
-    var type = document.getElementById('type');
+    var logicalName = document.getElementById("logicalname");
+    logicalName.innerText = attributeMetadata.LogicalName;
+    var type = document.getElementById("type");
     type.innerText = attributeMetadata.AttributeType;
-    var inputContainer = document.getElementById('input-container');
-    inputContainer.innerHTML = '';
+    var inputContainer = document.getElementById("input-container");
+    inputContainer.innerHTML = "";
     var input = createInputElement(attributeMetadata, value);
     inputContainer.appendChild(input);
 
     // Wire up the onclick of the Save button
-    var modalSave = document.getElementById('btn-modal-save');
+    var modalSave = document.getElementById("btn-modal-save");
     modalSave.onclick = onModalSaveClick;
   }
 
   function createInputElement(attributeMetadata, value) {
-
     switch (attributeMetadata.AttributeType) {
       case "Boolean":
-        var select = document.createElement('select');
+        var select = document.createElement("select");
         select.className = "form-control";
-        OrganizationEditor.Xrm.getBooleanOptions('organization', attributeMetadata.MetadataId)
+        OrganizationEditor.Xrm.getBooleanOptions("organization", attributeMetadata.MetadataId)
           .then(function (options) {
-            var emptyOption = document.createElement('option');
-            emptyOption.text = '-- Select --';
-            emptyOption.value = '';
+            var emptyOption = document.createElement("option");
+            emptyOption.text = "-- Select --";
+            emptyOption.value = "";
             select.appendChild(emptyOption);
             for (var i = 0; i < options.length; i++) {
-              var option = document.createElement('option');
+              var option = document.createElement("option");
               option.text = options[i].Label.UserLocalizedLabel.Label;
               option.value = options[i].Value;
               select.appendChild(option);
             }
             if (value !== undefined) {
-              if (value === 1 || value === '1' || value === true || value.toString() === 'true') {
-                select.value = '1';
-              } else if (value === 0 || value === '0' || value === false || value.toString() === 'false') {
-                select.value = '0';
+              if (value === 1 || value === "1" || value === true || value.toString() === "true") {
+                select.value = "1";
+              } else if (value === 0 || value === "0" || value === false || value.toString() === "false") {
+                select.value = "0";
               }
             }
             select.onchange = function (evt) {
@@ -160,7 +158,7 @@ var OrganizationEditor = (function (_public) {
         return select;
 
       case "Integer":
-        var input = document.createElement('input');
+        var input = document.createElement("input");
         input.type = "number";
         input.className = "form-control";
         input.value = value;
@@ -170,16 +168,16 @@ var OrganizationEditor = (function (_public) {
         return input;
 
       case "Picklist":
-        var select = document.createElement('select');
+        var select = document.createElement("select");
         select.className = "form-control";
-        OrganizationEditor.Xrm.getPicklistOptions('organization', attributeMetadata.MetadataId)
+        OrganizationEditor.Xrm.getPicklistOptions("organization", attributeMetadata.MetadataId)
           .then(function (options) {
-            var emptyOption = document.createElement('option');
-            emptyOption.text = '-- Select --';
-            emptyOption.value = '';
+            var emptyOption = document.createElement("option");
+            emptyOption.text = "-- Select --";
+            emptyOption.value = "";
             select.appendChild(emptyOption);
             for (var i = 0; i < options.length; i++) {
-              var option = document.createElement('option');
+              var option = document.createElement("option");
               option.text = options[i].Label.UserLocalizedLabel.Label;
               option.value = options[i].Value;
               select.appendChild(option);
@@ -195,21 +193,21 @@ var OrganizationEditor = (function (_public) {
         return select;
 
       case "Lookup":
-        var div = document.createElement('div');
+        var div = document.createElement("div");
         
-        var inputId = document.createElement('input');
-        inputId.id = 'input-id';
-        inputId.style.display = 'inline-block';
-        inputId.className = 'form-control col-6';
+        var inputId = document.createElement("input");
+        inputId.id = "input-id";
+        inputId.style.display = "inline-block";
+        inputId.className = "form-control col-6";
         inputId.value = value;
         div.appendChild(inputId);
         
-        var selectLogicalName = document.createElement('select');
-        selectLogicalName.id = 'select-logicalname';
-        selectLogicalName.style.display = 'inline-block';
-        selectLogicalName.className = 'form-control col-6';
+        var selectLogicalName = document.createElement("select");
+        selectLogicalName.id = "select-logicalname";
+        selectLogicalName.style.display = "inline-block";
+        selectLogicalName.className = "form-control col-6";
         attributeMetadata.Targets.forEach(function (element) {
-          var option = document.createElement('option');
+          var option = document.createElement("option");
           option.text = element;
           option.value = element;
           selectLogicalName.appendChild(option);
@@ -222,13 +220,13 @@ var OrganizationEditor = (function (_public) {
         return div;
 
       default:
-        var textarea = document.createElement('textarea');
-        textarea.setAttribute('rows', '4');
+        var textarea = document.createElement("textarea");
+        textarea.setAttribute("rows", "4");
         textarea.onchange = function (evt) {
           onInputChanged(evt, attributeMetadata);
         };
         textarea.className = "form-control";
-        textarea.value = value || '';
+        textarea.value = value || "";
         return textarea;
     }
 
@@ -243,12 +241,12 @@ var OrganizationEditor = (function (_public) {
   }
 
   function onLookupChanged(attributeMetadata) {
-    var inputId = document.getElementById('input-id');
-    var selectLogicalName = document.getElementById('select-logicalname');
+    var inputId = document.getElementById("input-id");
+    var selectLogicalName = document.getElementById("select-logicalname");
     var entity = OrganizationEditor.getLocals().entity;
     var id = inputId.value;
     var logicalName = selectLogicalName.value;
-    if (!id || id === '' || !logicalName || logicalName === '') {
+    if (!id || id === "" || !logicalName || logicalName === "") {
       entity[attributeMetadata.LogicalName] = null;
     } else {
       OrganizationEditor.Xrm.getEntitySetName(logicalName)
@@ -263,13 +261,13 @@ var OrganizationEditor = (function (_public) {
   function parseValue(value, attributeMetadata) {
     switch (attributeMetadata.AttributeType) {
       case "Boolean":
-        if (value === undefined || value === null || value === '') {
+        if (value === undefined || value === null || value === "") {
           return null;
         }
-        return value === 'true' || value === 1 || value === '1';
+        return value === "true" || value === 1 || value === "1";
 
       case "Picklist":
-        if (value === undefined || value === null || value === '') {
+        if (value === undefined || value === null || value === "") {
           return null;
         }
         return value;
@@ -284,37 +282,37 @@ var OrganizationEditor = (function (_public) {
   }
 
   function onModalSaveClick() {
-    showProgressIndicator("Saving ...");
+    OrganizationEditor.Xrm.showProgressIndicator("Saving ...");
 
-    var modal = document.getElementById('modal');
-    var logicalName = modal.getAttribute('data-logicalname');
-    var attributeType = modal.getAttribute('data-attributetype');
+    var modal = document.getElementById("modal");
+    var logicalName = modal.getAttribute("data-logicalname");
+    var attributeType = modal.getAttribute("data-attributetype");
 
     var data = {};
-    if (attributeType && attributeType === 'Lookup' && _entity[logicalName]) {
+    if (attributeType && attributeType === "Lookup" && _entity[logicalName]) {
       logicalName = logicalName + "@odata.bind";
       data[logicalName] = _entity[logicalName];
     } else {
       data[logicalName] = _entity[logicalName];
     }
 
-    OrganizationEditor.Xrm.updateRecord('organization', _entity.organizationid, data)
-      .then(closeProgressIndicator)
+    OrganizationEditor.Xrm.updateRecord("organization", _entity.organizationid, data)
+      .then(OrganizationEditor.Xrm.closeProgressIndicator)
       .catch(function (error) {
-        closeProgressIndicator();
+        OrganizationEditor.Xrm.closeProgressIndicator();
         OrganizationEditor.Xrm.openErrorDialog(error);
       });
   }
 
   function mapMetadataAttribute(attribute) {
     if (!attribute.MetadataId) {
-      attribute.MetadataId = '';
+      attribute.MetadataId = "";
     }
 
     if (!attribute.DisplayName || !attribute.DisplayName.UserLocalizedLabel || !attribute.DisplayName.UserLocalizedLabel.Label) {
       attribute.DisplayName = {
         UserLocalizedLabel: {
-          Label: ''
+          Label: ""
         }
       };
     }
@@ -322,17 +320,17 @@ var OrganizationEditor = (function (_public) {
     if (!attribute.Description || !attribute.Description.UserLocalizedLabel || !attribute.Description.UserLocalizedLabel.Label) {
       attribute.Description = {
         UserLocalizedLabel: {
-          Label: ''
+          Label: ""
         }
       };
     }
 
     if (!attribute.LogicalName) {
-      attribute.LogicalName = '';
+      attribute.LogicalName = "";
     }
 
     if (!attribute.AttributeType) {
-      attribute.AttributeType = '';
+      attribute.AttributeType = "";
     }
 
     return {
@@ -342,14 +340,6 @@ var OrganizationEditor = (function (_public) {
       logicalName: attribute.LogicalName,
       type: attribute.AttributeType
     };
-  }
-
-  function closeProgressIndicator() {
-    return Xrm.Utility.closeProgressIndicator();
-  }
-
-  function showProgressIndicator(message) {
-    return Xrm.Utility.showProgressIndicator(message);
   }
 
   function getLocals() {
@@ -368,16 +358,17 @@ var OrganizationEditor = (function (_public) {
       }
     }
   }
-  if (!Object.entries)
-  Object.entries = function( obj ){
-    var ownProps = Object.keys( obj ),
-        i = ownProps.length,
-        resArray = new Array(i); // preallocate the Array
-    while (i--)
-      resArray[i] = [ownProps[i], obj[ownProps[i]]];
-
-    return resArray;
-  };
+  if (!Object.entries) {
+    Object.entries = function( obj ){
+      var ownProps = Object.keys( obj ),
+          i = ownProps.length,
+          resArray = new Array(i); // preallocate the Array
+      while (i--)
+        resArray[i] = [ownProps[i], obj[ownProps[i]]];
+  
+      return resArray;
+    };
+  }    
 
   // Public
   _public.onLoad = onLoad;

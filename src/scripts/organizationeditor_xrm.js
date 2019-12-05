@@ -148,7 +148,7 @@ OrganizationEditor.Xrm = (function (_public) {
               response.value[0]) {
                 resolve(response.value[0]);
           } else {
-            reject({ message: 'No results found' });
+            reject({ message: "No results found" });
           }
         })
         .catch(reject);
@@ -159,15 +159,15 @@ OrganizationEditor.Xrm = (function (_public) {
     return new Promise(function (resolve, reject) {
       getEntityMetadata(entityLogicalName)
         .then(function (metadata) {
-          id = id.replace('{', '').replace('}', '');
+          id = id.replace("{", "").replace("}", "");
           var primaryIdAttribute = metadata.PrimaryIdAttribute;
           var entitySetName = metadata.EntitySetName;
-          var url = getApiDataUrl() + entitySetName + '(' + id + ')';
+          var url = getApiDataUrl() + entitySetName + "(" + id + ")";
           if (!data[primaryIdAttribute]) {
             data[primaryIdAttribute] = id;
           }
           return axios(url, {
-            method: 'PATCH',
+            method: "PATCH",
             data: data,
             headers: {
               "OData-MaxVersion": "4.0",
@@ -195,15 +195,19 @@ OrganizationEditor.Xrm = (function (_public) {
   }
 
   function openAlertDialog(options) {
-    return Xrm.Navigation.openAlertDialog(options)
+    return Xrm.Navigation.openAlertDialog(options);
   }
 
   function openErrorDialog(options) {
-    //return Xrm.Navigation.openErrorDialog(options)
-    return new Promise(function (resolve, reject) {
-      alert(options.message);
-      resolve();
-    });
+    return Xrm.Navigation.openErrorDialog(options);
+  }
+
+  function closeProgressIndicator() {
+    return Xrm.Utility.closeProgressIndicator();
+  }
+
+  function showProgressIndicator(message) {
+    return Xrm.Utility.showProgressIndicator(message);
   }
 
   // Public
@@ -216,6 +220,8 @@ OrganizationEditor.Xrm = (function (_public) {
   _public.getPicklistOptions = getPicklistOptions;
   _public.getBooleanOptions = getBooleanOptions;
   _public.getEntitySetName = getEntitySetName;
+  _public.closeProgressIndicator = closeProgressIndicator;
+  _public.showProgressIndicator = showProgressIndicator;
   return _public;
 
 } (OrganizationEditor.Xrm || {}));

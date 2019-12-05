@@ -29,7 +29,7 @@ Some fields cannot be directly edited, and these fields will not be shown, for e
 <img src="./img/sample-2.png">
 
 ## Bugs
-- Lookup values doesn't seem to be updating
+- Lookup values don't seem to be updating
 
 ## Browser compatibilty / Known issues
 Tested in:

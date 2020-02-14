@@ -1,0 +1,34 @@
+{
+  "name": "organization-editor",
+  "version": "1.0.0",
+  "description": "Dynamics 365 stores configuration values for the environment in the `Organization` entity. These fields are updated when changes are made in the `System > Administration > System Settings` window, although not all settings are present here",
+  "main": "./src/scripts/organizationeditor.js",
+  "scripts": {
+    "start": "webpack-dev-server",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cathalnoonan/d365-organization-editor.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cathalnoonan/d365-organization-editor/issues"
+  },
+  "homepage": "https://github.com/cathalnoonan/d365-organization-editor#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.8.4",
+    "@babel/preset-env": "^7.8.4",
+    "babel-loader": "^8.0.6",
+    "webpack": "^4.41.6",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3"
+  },
+  "dependencies": {
+    "core-js": "^3.6.4",
+    "regenerator-runtime": "^0.13.3"
+  }
+}

@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-    mode: 'development',
+    mode: 'production',
     entry: './src/scripts/organizationeditor.js',
     output: {
         path: path.resolve(__dirname, 'dist'),
@@ -27,6 +27,6 @@ module.exports = {
             '.js'
         ]
     },
-    devtool: 'source-map',
+    devtool: 'none',
     target: 'web'
 };

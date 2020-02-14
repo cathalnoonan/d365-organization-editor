@@ -229,3 +229,5 @@ OrganizationEditor.Xrm = (function (_public) {
     return _public;
 
 }(OrganizationEditor.Xrm || {}));
+
+export default OrganizationEditor;

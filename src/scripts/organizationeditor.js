@@ -1,23 +1,11 @@
 /// <reference path="./organizationeditor_xrm.js"/>
 
-var OrganizationEditor = (function (_public) {
+(function (_public) {
 
   // Private
   var _entity = {};
   var _attributeMetadata = {};
   var _metadata = {};
-
-  function onLoad() {
-    OrganizationEditor.Xrm.showProgressIndicator("Loading ...");
-
-    Promise.all([
-        OrganizationEditor.Xrm.getEntityMetadata("organization").then(setMetadata),
-        OrganizationEditor.Xrm.retrieveFirst("organization").then(setEntity)
-      ])
-      .then(buildTable)
-      .then(OrganizationEditor.Xrm.closeProgressIndicator)
-      .catch(OrganizationEditor.Xrm.openErrorDialog);
-  }
 
   function setEntity(json) {
     _entity = json;
@@ -370,9 +358,14 @@ var OrganizationEditor = (function (_public) {
     };
   }    
 
-  // Public
-  _public.onLoad = onLoad;
-  _public.getLocals = getLocals;
-  return _public;
+  OrganizationEditor.Xrm.showProgressIndicator("Loading ...");
+
+  Promise.all([
+    OrganizationEditor.Xrm.getEntityMetadata("organization").then(setMetadata),
+    OrganizationEditor.Xrm.retrieveFirst("organization").then(setEntity)
+  ])
+  .then(buildTable)
+  .then(OrganizationEditor.Xrm.closeProgressIndicator)
+  .catch(OrganizationEditor.Xrm.openErrorDialog);
 
 }(OrganizationEditor || {}));

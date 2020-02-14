@@ -1,1 +1,3 @@
 unmanaged/
+dist/
+node_modules/

@@ -1,3 +1,5 @@
+const axios = require('axios').default;
+
 var OrganizationEditor = {};
 OrganizationEditor.Xrm = (function () {
 
@@ -179,8 +181,8 @@ OrganizationEditor.Xrm = (function () {
         getEntitySetName,
         closeProgressIndicator,
         showProgressIndicator,
-    }
+    };
 
-}(OrganizationEditor.Xrm || {}, ));
+}());
 
 export default OrganizationEditor;

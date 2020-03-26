@@ -1,3 +1,5 @@
+window.Promise = window.Promise || require('es6-promise').Promise;
+
 export default function polyFills() {
     if (!Array.prototype.forEach) {
         Array.prototype.forEach = function (fn, scope) {

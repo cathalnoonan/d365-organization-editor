@@ -1,7 +1,7 @@
 import "regenerator-runtime/runtime";
 
 import OrganizationEditor from './organizationeditor.xrm';
-import polyFills from './organizationeditor.polyfills.js'
+import polyFills from './organizationeditor.polyfills.js';
 
 polyFills();
 
@@ -225,8 +225,6 @@ polyFills();
                 return textarea;
             }
         }
-
-        return input;
     }
 
     function onInputChanged(evt, attributeMetadata) {
@@ -268,7 +266,6 @@ polyFills();
             case "Integer":
                 return parseInt(value);
 
-                //case "String":
             default:
                 return value;
         }
@@ -332,7 +329,6 @@ polyFills();
     }
 
     // Initialization code
-
     OrganizationEditor.Xrm.showProgressIndicator("Loading ...");
 
     await Promise.all([

@@ -5,7 +5,7 @@
   "main": "./src/scripts/organizationeditor.js",
   "scripts": {
     "start": "webpack --watch --mode=development",
-    "build": "webpack --mode=production && cp src/pages/organizationeditor.html dist/organizationeditor.html"
+    "build": "webpack --mode=production && copyfiles --all --flat ./src/**/*.html dist"
   },
   "repository": {
     "type": "git",
@@ -25,6 +25,7 @@
     "@babel/plugin-proposal-export-default-from": "^7.8.3",
     "@babel/preset-env": "^7.9.0",
     "babel-loader": "^8.1.0",
+    "copyfiles": "^2.2.0",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11"
   },

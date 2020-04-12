@@ -5,7 +5,7 @@
   "main": "./src/scripts/organizationeditor.js",
   "scripts": {
     "start": "webpack --watch --mode=development",
-    "build": "webpack --mode=production"
+    "build": "webpack --mode=production && cp src/pages/organizationeditor.html dist/organizationeditor.html"
   },
   "repository": {
     "type": "git",

@@ -11,7 +11,7 @@ The fields shown in the editor are retrieved from the metadata, so any fields th
 
 Some fields cannot be directly edited, and these fields will not be shown, for example `CreatedOn`
 
-<img src="./img/root.png">
+![Example image](./img/root.png)
 
 ## Caution
 <b>Changing some of these values could break something, so be careful not to break your Dynamics 😃</b>
@@ -25,8 +25,9 @@ Some fields cannot be directly edited, and these fields will not be shown, for e
 - Update the value and click `Save`
 - Changing some values require `Publish All Customizations` to reflect 
 
-<img src="./img/sample-1.png">
-<img src="./img/sample-2.png">
+![Example usage 1](./img/sample-1.png)
+
+![Example usage 2](./img/sample-2.png)
 
 ## Bugs
 - Lookup values don't seem to be updating

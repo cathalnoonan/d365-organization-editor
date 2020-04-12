@@ -44,12 +44,20 @@ Tested in:
   - No specific issues
 
 
+## Building the Solution
+_Building the solution assumes that NODE/NPM is installed_
+
+There is a powershell script included to bundle the JS and build a solution file, it is called `Pack.ps1`
+
+Running this command will install the node_modules, download the SolutionPackager, and build an unmanaged and managed solution based on the definition in the Solution folder
+
+
 ## Building the JS code
-Building the project assumes that NODE/NPM is installed
+_Building the project assumes that NODE/NPM is installed_
 
 ### Commands required to build the JS code
 Install the packages to the node_modules folder (this will only be required if a new release is made)
-> npm i
+> npm install
 
 Then build the code
 

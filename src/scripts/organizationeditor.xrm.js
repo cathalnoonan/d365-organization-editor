@@ -3,6 +3,8 @@ const axios = require('axios').default;
 var OrganizationEditor = {};
 OrganizationEditor.Xrm = (function () {
 
+    var Xrm = Xrm || window.top.Xrm || window.opener.Xrm;
+
     // Private
     var _globalContext = null;
     var _entitySets = {};
@@ -15,10 +17,15 @@ OrganizationEditor.Xrm = (function () {
     }
 
     function getClientUrl() {
-        if (!_globalContext && GetGlobalContext) {
-            _globalContext = GetGlobalContext();
+        return getGlobalContext().getClientUrl();
+    }
+
+    function getGlobalContext() {
+        if (!_globalContext) {
+            var GetGlobalContext;
+            _globalContext = (GetGlobalContext && GetGlobalContext()) || Xrm.Utility.getGlobalContext();
         }
-        return _globalContext.getClientUrl();
+        return _globalContext;
     }
 
     async function getEntityMetadata(entityName) {

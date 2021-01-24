@@ -47,9 +47,12 @@ Tested in:
 ## Building the Solution
 _Building the solution assumes that NODE/NPM is installed_
 
-There is a powershell script included to bundle the JS and build a solution file, it is called `Pack.ps1`
+There is a batch script included to bundle the JS and build a solution file, it is called `build.bat`
 
-Running this command will install the node_modules, download the SolutionPackager, and build an unmanaged and managed solution based on the definition in the Solution folder
+This will call `.\build-scripts\Build.ps1`, which will
+- Install the node_modules
+- Download the SolutionPackager
+- Build an unmanaged and managed solution (to `.\build` folder)
 
 
 ## Building the JS code

@@ -27,7 +27,7 @@ function createWebpackConfig(argv) {
             modules: ['node_modules'],
             extensions: ['.js']
         },
-        target: 'web',
+        target: ['web', 'es5'],
     }
 
     return config;

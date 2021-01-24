@@ -1,25 +1,11 @@
-# Variables for this script
-$solutionName = "organizationeditor"
+# Parse solution xml
 $solutionXmlPath = ".\solution\Other\Solution.xml";
-$solutionVersion = $([xml] $(Get-Content $solutionXmlPath)).ImportExportXml.SolutionManifest.Version -replace "[.]", "_";
+$solutionXml = $([xml] $(Get-Content $solutionXmlPath));
+$solutionManifest = $solutionXml.ImportExportXml.SolutionManifest;
 
-
-# Install node_modules, run build
-if (![System.IO.Directory]::Exists("node_modules")) {
-    npm install;
-} else {
-    Write-Output "`nnode_modules found`n"
-}
-npm run build;
-
-
-# Get SolutionPackager if it doesn't exist
-if (![System.IO.File]::Exists("Tools/CoreTools/SolutionPackager.exe")) {
-    .\GetTools.ps1;
-} else {
-    Write-Output "`nSolutionPackager found`n"
-}
-
+# Variables for this script
+$solutionName = $solutionManifest.UniqueName;
+$solutionVersion = $solutionManifest.Version -replace "[.]", "_";
 
 # Build unmanaged
 Write-Output "Packing unmanaged solution"

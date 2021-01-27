@@ -1,5 +1,7 @@
 # Restore node_modules
-npm ci
+if (!(Test-Path "node_modules")) {
+    npm ci
+}
 
 # Build project
 npm run build

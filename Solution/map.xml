@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>  
 <Mapping>  
-    <FileToFile map="WebResources\cn_\pages\organizationeditor.html" to="..\dist\organizationeditor.html" />  
-    <FileToFile map="WebResources\cn_\scripts\organizationeditor.bundle.js" to="..\dist\organizationeditor.bundle.js" />  
+    <FileToFile map="WebResources\cn_\organizationeditor\organizationeditor.html"   to="..\dist\organizationeditor.html" />  
+    <FileToFile map="WebResources\cn_\organizationeditor\organizationeditor.js"     to="..\dist\organizationeditor.js" />  
+    <FileToFile map="WebResources\cn_\organizationeditor\organizationeditor-js.map" to="..\dist\organizationeditor-js.map" />  
 </Mapping>  

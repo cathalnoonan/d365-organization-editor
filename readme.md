@@ -4,6 +4,7 @@ Dynamics 365 stores configuration values for the environment in the `Organizatio
 Examples of fields that are not available in the System Settings are:
 - __IsFolderAutoCreatedonSP__: Select whether folders should be automatically created on SharePoint.
 - __AllowLegacyClientExperience__: Enable access to legacy web client UI
+  - This field cannot be changed after fully migrating to unified interface
 
 This solution provides a way to update the fields in the organization entity without writing a console app
 
@@ -30,7 +31,7 @@ Some fields cannot be directly edited, and these fields will not be shown, for e
 ![Example usage 2](./img/sample-2.png)
 
 ## Bugs
-- Lookup values don't seem to be updating
+- Lookup values don't seem to be updating [*fixed*]
 
 ## Browser compatibility / Known issues
 Tested in:
@@ -45,7 +46,7 @@ Tested in:
 
 
 ## Building the Solution
-_Building the solution assumes that NODE/NPM is installed_
+_Building the solution assumes that NODE/NPM is installed and the user has permissions to execute the batch / powershell scripts_
 
 There is a batch script included to bundle the JS and build a solution file, it is called `build.bat`
 
@@ -68,6 +69,6 @@ Then build the code
 
 After the code has been built, the JS file will be placed in the /dist folder
 
-This file can be copy/pasted into the WebResource using your method of choice
+These files can be copy/pasted into the WebResource using your method of choice
 - OOB WebResource editor
 - XRM Toolbox: WebResource Manager

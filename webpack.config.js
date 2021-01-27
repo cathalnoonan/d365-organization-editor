@@ -1,36 +1,28 @@
 const path = require('path');
 
-function createWebpackConfig(argv) {
-    const isDevelopment = argv.mode === 'development';
-
-    const config = {
-        devtool: isDevelopment ? 'inline-source-map' : 'source-map',
-        entry: './src/scripts/organizationeditor.js',
-        output: {
-            path: path.resolve(__dirname, 'dist'),
-            filename: 'organizationeditor.bundle.js',
-            sourceMapFilename: 'organizationeditor.bundle.js.map',
-        },
-        module: {
-            rules: [
-                {
-                    test: /\.js?$/,
-                    exclude: /node_modules/,
-                    loader: 'babel-loader',
-                    options: {
-                        presets: ['@babel/preset-env']
-                    }
-                }
-            ]
-        },
-        resolve: {
-            modules: ['node_modules'],
-            extensions: ['.js']
-        },
-        target: ['web', 'es5'],
+module.exports = (env, argv) => ({
+    target: ['web', 'es5'],
+    devtool: argv.mode === 'development' ? 'inline-source-map' : 'source-map',
+    entry: path.resolve(__dirname, 'src', 'index.ts'),
+    output: {
+        path: path.resolve(__dirname, 'dist'),
+        filename: 'organizationeditor.js',
+        sourceMapFilename: 'organizationeditor-js.map',
+    },
+    module: {
+        rules: [
+            {
+                test: /\.ts$/,
+                exclude: /node_modules/,
+                loader: 'ts-loader',
+            }
+        ]
+    },
+    resolve: {
+        modules: ['node_modules'],
+        extensions: ['.js', '.ts']
+    },
+    externals: {
+        axios: 'axios',
     }
-
-    return config;
-}
-
-module.exports = (env, argv) => createWebpackConfig(argv);
+})

@@ -11,23 +11,11 @@ $solutionVersion = $solutionManifest.Version -replace "[.]", "_";
 Write-Output "Packing unmanaged solution"
 Tools/CoreTools/SolutionPackager.exe `
     /action: Pack `
-    /zipfile: ".\build\$($solutionName)_$($solutionVersion).zip " `
+    /zipfile: ".\dist\$($solutionName)_$($solutionVersion).zip " `
     /folder: .\solution `
     /errorlevel: Warning `
     /nologo `
     /map: .\solution\map.xml `
-    /PackageType: Unmanaged
-
-# Build managed
-Write-Output "Packing managed solution"
-Tools/CoreTools/SolutionPackager.exe `
-    /action: Pack `
-    /zipfile: ".\build\$($solutionName)_$($solutionVersion)_managed.zip " `
-    /folder: .\solution `
-    /errorlevel: Warning `
-    /nologo `
-    /map: .\solution\map.xml `
-    /PackageType: Managed
-
+    /PackageType: Both
 
 Write-Output "`nPack complete`n"

@@ -5,6 +5,7 @@
         "buildmodal",
         "buildmodalinput",
         "buildtable",
+        "copyfiles",
         "entitymetadata",
         "entityreference",
         "logicalname",

@@ -5,8 +5,8 @@
   "main": "./src/scripts/organizationeditor.js",
   "scripts": {
     "prebuild": "rimraf ./dist/*",
-    "build": "webpack --mode=production && copyfiles --all --flat ./src/**/*.html dist",
-    "dev": "webpack --mode=development && copyfiles --all --flat ./src/**/*.html dist"
+    "build": "webpack --mode=production && copyfiles --all --flat ./src/**/*.html temp",
+    "dev": "webpack --mode=development && copyfiles --all --flat ./src/**/*.html temp"
   },
   "repository": {
     "type": "git",

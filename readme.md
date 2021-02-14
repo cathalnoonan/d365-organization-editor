@@ -10,16 +10,16 @@ This solution provides a way to update the fields in the organization entity wit
 
 The fields shown in the editor are retrieved from the metadata, so any fields that are added to the organization entity will be shown
 
-Some fields cannot be directly edited, and these fields will not be shown, for example `CreatedOn`
+Some fields cannot be edited, and these fields will not be shown, for example `CreatedOn`
 
 ![Example image](./img/root.png)
 
 ## Caution
-<b>Changing some of these values could break something, so be careful not to break your Dynamics 😃</b>
+**Changing some of these values could break something, so be careful not to break your Dynamics 😃**
 (Set the values at your own risk)
 
 ## Installation / Usage
-- Download the solution from the <a href="https://github.com/cathalnoonan/d365-organization-editor/releases">Releases page</a>
+- Download the solution from the [Releases page](https://github.com/cathalnoonan/d365-organization-editor/releases)
 - Install the solution to the environment
 - Open the solution and the WebResource will be open under the `Configuration` section
 - Search for the field to update using CTRL+F, click the `Edit` button
@@ -50,24 +50,24 @@ _Building the solution assumes that NODE/NPM is installed and the user has permi
 
 There is a batch script included to bundle the JS and build a solution file, it is called `build.bat`
 
-This will call `.\build-scripts\Build.ps1`, which will
+This will call `.\scripts\Build.ps1`, which will
 - Install the node_modules
+- Build and bundle the Typescript files for the browser (to `.\temp` folder)
 - Download the SolutionPackager
-- Build an unmanaged and managed solution (to `.\build` folder)
+- Build an unmanaged and managed solution (to `.\dist` folder)
 
 
-## Building the JS code
+## Building the code
 _Building the project assumes that NODE/NPM is installed_
 
-### Commands required to build the JS code
+### Commands required to build the code
 Install the packages to the node_modules folder (this will only be required if a new release is made)
 > npm install
 
 Then build the code
-
 > npm run build
 
-After the code has been built, the JS file will be placed in the /dist folder
+After the code has been built, the JS file will be placed in the /temp folder
 
 These files can be copy/pasted into the WebResource using your method of choice
 - OOB WebResource editor

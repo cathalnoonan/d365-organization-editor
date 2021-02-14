@@ -1,3 +1,3 @@
 @echo off
 
-call powershell -command "& { . .\build-scripts\Build.ps1}"
+call powershell -command "& { . .\scripts\Build.ps1 }"

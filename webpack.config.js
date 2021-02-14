@@ -5,7 +5,7 @@ module.exports = (env, argv) => ({
     devtool: 'source-map',
     entry: path.resolve(__dirname, 'src', 'index.ts'),
     output: {
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, 'temp'),
         filename: 'organizationeditor.js',
         sourceMapFilename: 'organizationeditor-js.map',
     },

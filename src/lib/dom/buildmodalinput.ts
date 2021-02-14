@@ -108,13 +108,13 @@ async function buildIntegerInput(options: BuildIntegerInputOptions): Promise<Mod
 
     const getPatchUpdate = async (): Promise<OrganizationAttributeUpdateOptions> => {
         const data: Dictionary<any> = {}
-        
+
         if (!isNaN(parseInt(input.value))) {
             data[attribute.LogicalName] = parseInt(input.value)
         } else {
             data[attribute.LogicalName] = null
         }
-        
+
         return {
             type: 'update',
             attribute,
@@ -169,46 +169,65 @@ async function buildPicklistOptionInput(options: BuildPicklistOptions): Promise<
 }
 
 async function buildLookupInput(options: BuildLookupOptions): Promise<ModalInput> {
-
     const { attribute, webApi, value, } = options
 
     const div = document.createElement('div')
 
-    const inputId = document.createElement('input')
-    inputId.id = 'input-id'
-    inputId.style.display = 'inline-block'
-    inputId.className = 'form-control col-6'
-
-    div.appendChild(inputId)
-
+    // Create select:LogicalName
     const selectLogicalName = document.createElement('select')
     selectLogicalName.id = 'select-logicalname'
     selectLogicalName.style.display = 'inline-block'
     selectLogicalName.className = 'form-control col-6'
-
-    const emptyOption = document.createElement('option')
-    emptyOption.text = '--- Select ---'
-    emptyOption.value = ''
-    selectLogicalName.appendChild(emptyOption)
-
-    attribute.Targets.forEach(entityName => {
-        const option = document.createElement('option')
-        option.text = entityName
-        option.value = entityName
-        selectLogicalName.appendChild(option)
-    })
-
     div.appendChild(selectLogicalName)
 
-    if (value) {
-        inputId.value = value.id ?? ''
-        selectLogicalName.value = value.entityType ?? ''
+    // Create select:Id
+    const selectId = document.createElement('select')
+    selectId.id = 'select-id'
+    selectId.style.display = 'inline-block'
+    selectId.className = 'form-control col-6'
+    div.appendChild(selectId)
+
+    // Populate select:LogicalName
+    selectLogicalName.appendChild(createHtmlOption('--- Select ---', ''))
+    for (const entityName of attribute.Targets) {
+        const { DisplayName } = await webApi.getEntityMetadata(entityName)
+        const entityLabel = DisplayName?.UserLocalizedLabel?.Label ?? entityName
+        selectLogicalName.appendChild(createHtmlOption(entityLabel, entityName))
+    }
+
+    // Populate select:Id (if value assigned already)
+    if (value && value.entityType) {
+        const entityReferences = await webApi.getAllEntityReferences(value.entityType)
+        
+        entityReferences.forEach(entityReference => {
+            selectId.appendChild(createHtmlOption(entityReference.name, entityReference.id))
+        })
+
+        selectId.value = value.id
+        selectLogicalName.value = value.entityType
+    }
+
+    // OnChange select:LogicalName => Re-populate select:Id
+    selectLogicalName.onchange = async () => {
+        const logicalName = selectLogicalName.value
+
+        selectId.value = ''
+        selectId.innerHTML = ''
+        selectId.appendChild(createHtmlOption('--- Select ---', ''))
+
+        if (logicalName !== '') {
+            const entityReferences = await webApi.getAllEntityReferences(logicalName)
+            
+            entityReferences.forEach(entityReference => {
+                selectId.appendChild(createHtmlOption(entityReference.name, entityReference.id))
+            })
+        }
     }
 
     const getPatchUpdate = async (): Promise<OrganizationAttributeUpdateOptions> => {
-        const id = inputId.value
+        const id = selectId.value
         const logicalName = selectLogicalName.value
-        
+
         if (id && logicalName) {
             const data: Dictionary<any> = {}
             const entitySetName = await webApi.getEntitySetName(logicalName)
@@ -230,6 +249,13 @@ async function buildLookupInput(options: BuildLookupOptions): Promise<ModalInput
         element: div,
         getPatchUpdate
     }
+}
+
+function createHtmlOption(text: string, value: string): HTMLOptionElement {
+    const option = document.createElement('option')
+    option.text = text
+    option.value = value
+    return option
 }
 
 async function buildTextAreaInput(options: BuildTextAreaOptions): Promise<ModalInput> {

@@ -1,6 +1,6 @@
 import Axios, { AxiosResponse } from 'axios'
 
-import { EntityMetadata, PicklistAttributeMetadata, PicklistItem, TwoOptionAttributeMetadata, TwoOptionItem } from '../models'
+import { EntityMetadata, EntityReference, PicklistAttributeMetadata, PicklistItem, TwoOptionAttributeMetadata, TwoOptionItem } from '../models'
 import { Dictionary } from '../utilities'
 
 export class WebApi {
@@ -33,7 +33,7 @@ export class WebApi {
         }
 
         const url = `${this.getApiDataUrl()}/EntityDefinitions(LogicalName='${entityName}')?$expand=Attributes`
-        
+
         const response = await Axios.get<EntityMetadata>(url)
         const json = response.data
         return this.entityMetadata[entityName] = json // Memoize, return
@@ -80,7 +80,7 @@ export class WebApi {
         }
 
         const url = `${this.getApiDataUrl()}/EntityDefinitions(LogicalName='${entityName}')/Attributes(${metadataId})/Microsoft.Dynamics.CRM.BooleanAttributeMetadata?$select=LogicalName&$expand=OptionSet,GlobalOptionSet`
-        
+
         const response = await Axios.get<TwoOptionAttributeMetadata>(url)
 
         const json = response.data
@@ -130,13 +130,34 @@ export class WebApi {
     }
 
     public async retrieveFirst(entityLogicalName: string, options?: string): Promise<any> {
-        const response = await this.retrieveMultipleRecords(entityLogicalName, options);
+        const response = await this.retrieveMultipleRecords(entityLogicalName, options)
         if (response.value && response.value[0]) {
             return response.value[0]
         }
         throw {
             message: 'No results found'
         }
+    }
+
+    public async getAllEntityReferences(entityName: string): Promise<EntityReference[]> {
+        const { EntitySetName, PrimaryIdAttribute, PrimaryNameAttribute, } = await this.getEntityMetadata(entityName)
+        const references: EntityReference[] = []
+
+        let url = `${this.getApiDataUrl()}/${EntitySetName}?$select=${PrimaryIdAttribute},${PrimaryNameAttribute}&$orderby=${PrimaryNameAttribute}`
+        while (true) {
+            const response = await Axios.get<RetrieveMultipleResponse>(url)
+            const { data } = response
+            const newReferences = data.value.map(x => ({ entityName, id: x[PrimaryIdAttribute], name: x[PrimaryNameAttribute] }))
+            references.push(...newReferences)
+            
+            if (data["@odata.nextLink"]) {
+                url = data["@odata.nextLink"]
+            } else {
+                break
+            }
+        }
+
+        return references
     }
 
     public async updateRecord(entityLogicalName: string, id: string, data: Dictionary<any>): Promise<any> {
@@ -174,13 +195,13 @@ export class WebApi {
 
     public async unlinkRecord(entityLogicalName: string, id: string, attributeName: string): Promise<void> {
         id = id.replace('{', '').replace('}', '')
-        
+
         const entitySetName = await this.getEntitySetName(entityLogicalName)
         const url = `${this.getApiDataUrl()}${entitySetName}(${id})/${attributeName}/$ref`
-        
+
         const response = await Axios(url, {
             method: 'DELETE',
-            
+
             headers: {
                 'OData-MaxVersion': '4.0',
                 'OData-Version': '4.0',
@@ -214,4 +235,5 @@ export interface WebApiOptions {
 
 export interface RetrieveMultipleResponse {
     value: any[]
+    "@odata.nextLink"?: string
 }

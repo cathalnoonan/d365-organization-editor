@@ -1,8 +1,8 @@
-const path = require('path');
+const path = require('path')
 
 module.exports = (env, argv) => ({
     target: ['web', 'es5'],
-    devtool: argv.mode === 'development' ? 'inline-source-map' : 'source-map',
+    devtool: 'source-map',
     entry: path.resolve(__dirname, 'src', 'index.ts'),
     output: {
         path: path.resolve(__dirname, 'dist'),

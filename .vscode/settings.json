@@ -6,6 +6,7 @@
         "buildmodalinput",
         "buildtable",
         "entitymetadata",
+        "entityreference",
         "logicalname",
         "lookupattributemetadata",
         "metadataid",

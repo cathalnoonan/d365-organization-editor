@@ -6,7 +6,7 @@ import { OrganizationEditor } from './lib'
     const xrm = window!.Xrm ?? window!.opener!.Xrm ?? window!.parent!.Xrm
 
     const organizationEditor = new OrganizationEditor({
-        apiVersion: 'v9.1',
+        apiVersion: 'v9.0',
         xrm,
     })
 

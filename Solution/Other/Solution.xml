@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <ImportExportXml version="9.0.0.0" SolutionPackageVersion="9.0" languagecode="1033" generatedBy="CrmOnPremise" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SolutionManifest>
     <UniqueName>organizationeditor</UniqueName>
@@ -6,7 +6,7 @@
       <LocalizedName description="Organization Editor" languagecode="1033" />
     </LocalizedNames>
     <Descriptions />
-    <Version>1.2.0.0</Version>
+    <Version>1.2.1.0</Version>
     <Managed>Both</Managed>
     <ConfigurationPage>cn_/organizationeditor/organizationeditor.html</ConfigurationPage>
     <Publisher>

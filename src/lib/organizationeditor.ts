@@ -41,6 +41,19 @@ export class OrganizationEditor {
         this.alerts.closeProgressIndicator()
     }
 
+    public publishCustomizations = async (): Promise<void> => {
+        this.alerts.showProgressIndicator('Publishing ...')
+        try {
+            await this.webApi.publishCustomizations()
+        } catch (ex) {
+            this.alerts.openErrorDialog({
+                message: 'Error publishing customizations. Download the log file for mor details.',
+                details: JSON.stringify(ex),
+            })
+        }
+        this.alerts.closeProgressIndicator()
+    }
+
     private mapMetadataAttributes = (): void => {
         this.entityMetadata.Attributes
             .filter(attr => attr.IsValidForUpdate && attr.AttributeType !== 'Virtual')

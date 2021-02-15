@@ -7,42 +7,50 @@ import { onClickEdit } from './onclickedit'
 export function buildTable(options: BuildTableOptions): void {
     const { attributes } = options
 
-    const tbody = document.getElementById('tbody')!
+    const table = document.getElementById('t-body')!
+
+    const columnClassNames = getColumnClassNames()
 
     for (const key in attributes) {
         const attribute = attributes[key]
 
-        const tr = document.createElement('tr')
-        tr.setAttribute('data-logicalname', attribute.LogicalName)
-        tbody.appendChild(tr)
+        const row = document.createElement('div')
+        row.className = 'd-flex'
+        row.setAttribute('data-logicalname', attribute.LogicalName)
+        table.appendChild(row)
 
-        const tdDisplayName = document.createElement('td')
-        tdDisplayName.innerText = attribute.DisplayName?.UserLocalizedLabel?.Label ?? attribute.LogicalName
-        tr.appendChild(tdDisplayName)
+        const displayName = document.createElement('div')
+        displayName.className = columnClassNames.displayName
+        displayName.innerText = attribute.DisplayName?.UserLocalizedLabel?.Label ?? attribute.LogicalName
+        row.appendChild(displayName)
 
-        const tdDescription = document.createElement('td')
-        tdDescription.innerText = attribute.Description?.UserLocalizedLabel?.Label ?? ''
-        tr.appendChild(tdDescription)
+        const description = document.createElement('div')
+        description.className = columnClassNames.description
+        description.innerText = attribute.Description?.UserLocalizedLabel?.Label ?? ''
+        row.appendChild(description)
 
-        const tdLogicalName = document.createElement('td')
-        tdLogicalName.innerText = attribute.LogicalName
-        tr.appendChild(tdLogicalName)
+        const logicalName = document.createElement('div')
+        logicalName.className = columnClassNames.logicalName
+        logicalName.innerText = attribute.LogicalName
+        row.appendChild(logicalName)
 
-        const tdDataType = document.createElement('td')
-        tdDataType.innerText = attribute.AttributeType
-        tr.appendChild(tdDataType)
+        const dataType = document.createElement('div')
+        dataType.className = columnClassNames.dataType
+        dataType.innerText = attribute.AttributeType
+        row.appendChild(dataType)
 
-        const tdEdit = document.createElement('td')
+        const action = document.createElement('div')
+        action.className = columnClassNames.action
         const btnEdit = document.createElement('button')
         btnEdit.innerText = 'Edit'
-        btnEdit.className = 'btn btn-info btn-small'
+        btnEdit.className = 'btn btn-info btn-sm btn-w'
         btnEdit.onclick = () => onClickEdit({ ...options, attribute })
-        
+
         btnEdit.setAttribute('data-toggle', 'modal')
         btnEdit.setAttribute('data-target', '#modal')
 
-        tdEdit.appendChild(btnEdit)
-        tr.appendChild(tdEdit)
+        action.appendChild(btnEdit)
+        row.appendChild(action)
     }
 }
 
@@ -52,4 +60,22 @@ export interface BuildTableOptions {
     webApi: WebApi
     getAttributeValue: (attribute: AttributeMetadata) => any
     updateEntity: (options: OrganizationAttributeUpdateOptions) => Promise<void>
+}
+
+function getColumnClassNames(): ColumnClassNames {
+    return {
+        displayName: document.getElementById('th-displayName')!.className,
+        description: document.getElementById('th-description')!.className,
+        logicalName: document.getElementById('th-logicalName')!.className,
+        dataType: document.getElementById('th-dataType')!.className,
+        action: document.getElementById('th-action')!.className,
+    }
+}
+
+interface ColumnClassNames {
+    displayName: string
+    description: string
+    logicalName: string
+    dataType: string
+    action: string
 }

@@ -3,4 +3,5 @@
     <FileToFile map="WebResources\cn_\organizationeditor\organizationeditor.html"   to="..\temp\organizationeditor.html" />  
     <FileToFile map="WebResources\cn_\organizationeditor\organizationeditor.js"     to="..\temp\organizationeditor.js" />  
     <FileToFile map="WebResources\cn_\organizationeditor\organizationeditor-js.map" to="..\temp\organizationeditor-js.map" />  
+    <FileToFile map="WebResources\cn_\organizationeditor\organizationeditor.css"    to="..\temp\organizationeditor.css" />  
 </Mapping>  

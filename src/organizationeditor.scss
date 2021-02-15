@@ -1,0 +1,69 @@
+$header-color: white;
+$header-padding: 3.25rem;
+$header-border-color: #444;
+$row-v-padding: 0.8rem;
+$row-border-color: #ccc;
+$scollbar-width: 8px;
+
+body {
+    overflow-y: visible;
+}
+
+#t-header {
+    position: fixed;
+    width: 100%;
+    font-weight: bold;
+    font-size: 1.05rem;
+    background-color: $header-color;
+    z-index: 1;
+    border-bottom: 1px solid $header-border-color;
+    padding-top: $row-v-padding;
+    padding-bottom: $row-v-padding;
+
+}
+
+#t-body {
+    height: 100%;
+    overflow-y: visible;
+    padding-top: $header-padding;
+
+    .d-flex {
+        border-bottom: 1px solid $row-border-color;
+        padding-top: $row-v-padding;
+        padding-bottom: $row-v-padding;
+
+        div {
+            word-break: break-word;
+        }
+    }
+}
+
+.btn-w {
+    width: 4rem;
+}
+
+body.modal-open{
+    #t-header {
+        width: calc(100% - #{$scollbar-width});
+    }
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: $scollbar-width;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}

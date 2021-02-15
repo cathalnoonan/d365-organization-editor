@@ -11,4 +11,8 @@ import { OrganizationEditor } from './lib'
     })
 
     await organizationEditor.init()
+
+    document.getElementById('btn-publish')!.addEventListener('click', async () => {
+        await organizationEditor.publishCustomizations()
+    }, false)
 }())

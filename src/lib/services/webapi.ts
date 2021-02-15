@@ -219,6 +219,26 @@ export class WebApi {
         }
     }
 
+    public async publishCustomizations(): Promise<void> {
+        return new Promise(async (resolve, reject) => {
+            const url = `${this.getApiDataUrl()}/PublishAllXml`
+
+            const response = await Axios.post(url, null, {
+                headers: {
+                    'OData-MaxVersion': '4.0',
+                    'OData-Version': '4.0',
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json; charset=utf-8',
+                }
+            })
+            
+            if (this.isSuccess(response)) 
+                return resolve()
+            else 
+                return reject()
+        })
+    }
+
     private isSuccess(response: AxiosResponse): boolean {
         // Axios
         const { status } = response

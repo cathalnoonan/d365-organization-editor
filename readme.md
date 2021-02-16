@@ -14,9 +14,13 @@ Some fields cannot be edited, and these fields will not be shown, for example `C
 
 ![Example image](./img/root.png)
 
+---
+
 ## Caution
 **Changing some of these values could break something, so be careful not to break your Dynamics 😃**
 (Set the values at your own risk)
+
+---
 
 ## Installation / Usage
 - Download the solution from the [Releases page](https://github.com/cathalnoonan/d365-organization-editor/releases)
@@ -30,20 +34,6 @@ Some fields cannot be edited, and these fields will not be shown, for example `C
 
 ![Example usage 2](./img/sample-2.png)
 
-## Bugs
-- Lookup values don't seem to be updating [*fixed*]
-
-## Browser compatibility / Known issues
-Tested in:
-- Chrome
-  - No specific issues
-- Firefox
-  - No specific issues
-- Edge
-  - No specific issues
-- IE 11 (windows 10)
-  - No specific issues
-
 ---
 
 ## Building the Solution
@@ -53,6 +43,6 @@ There is a batch script included to bundle the JS and build a solution file, it 
 
 This will call `.\scripts\Build.ps1`, which will
 - Install the node_modules
-- Build and bundle the Typescript files for the browser (to `.\temp` folder)
+- Build and bundle the project files for the browser (to `.\temp` folder)
 - Download the SolutionPackager
-- Build an unmanaged and managed solution (to `.\dist` folder)
+- Build a managed solution (to `.\dist` folder)

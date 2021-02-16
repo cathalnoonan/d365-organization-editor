@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=11">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     
@@ -9,15 +10,13 @@
     <!-- <script src="../../ClientGlobalContext.js.aspx"></script> -->
     <script>
         var Xrm;
-        if (window.opener && window.opener.Xrm) {
-            Xrm = window.opener.Xrm
-        } else if (window.parent.Xrm) {
-            Xrm = window.parent.Xrm
+        if (!Xrm && window.opener && window.opener.Xrm) {
+            Xrm = window.opener.Xrm;
+        } else if (!Xrm && window.parent.Xrm) {
+            Xrm = window.parent.Xrm;
         }
-        if (!window.Xrm) {
-            var script = document.createElement('script');
-            script.src = '../../ClientGlobalContext.js.aspx';
-            document.head.appendChild(script);
+        if (!Xrm) {
+            alert('Error: Xrm object could not be found.');
         }
     </script>
 
@@ -36,11 +35,11 @@
 
         <div id="t-header">
             <div class="d-flex">
-                <div id="th-displayName" class="d-none   d-sm-none             d-md-none             d-lg-block col-lg-3">Display Name</div>
-                <div id="th-description" class="col-9    col-sm-7              col-md-4              col-lg-3">Description</div>
-                <div id="th-logicalName" class="d-none   d-sm-block col-sm-3   col-md-3              col-lg-3">Logical Name</div>
-                <div id="th-dataType"    class="d-none   d-sm-none             d-md-block col-md-3   col-lg-2">Type</div>
-                <div id="th-action"      class="col-3    col-sm-2              col-md-2              col-lg-1">
+                <div id="th-displayName"     class="d-none   d-sm-none             d-md-none             d-lg-block col-lg-3">Display Name</div>
+                <div id="th-description"     class="col-9    col-sm-7              col-md-4              col-lg-3">Description</div>
+                <div id="th-logicalName"     class="d-none   d-sm-block col-sm-3   col-md-3              col-lg-3">Logical Name</div>
+                <div id="th-dataType"        class="d-none   d-sm-none             d-md-block col-md-3   col-lg-2">Type</div>
+                <div id="th-action"          class="col-3    col-sm-2              col-md-2              col-lg-1">
                     <button id="btn-publish" class="btn btn-sm btn-success btn-w">Publish</button>
                 </div>
             </div>
@@ -82,8 +81,8 @@
 
                 <!-- Modal footer -->
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-success" data-dismiss="modal" id="btn-modal-save">Save</button>
+                    <button type="button" class="btn btn-danger btn-sm btn-w" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success btn-sm btn-w" data-dismiss="modal" id="btn-modal-save">Save</button>
                 </div>
 
             </div>
@@ -92,7 +91,7 @@
     </div>
 
     <!-- Bluebird -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bluebird/3.7.2/bluebird.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bluebird/3.7.2/bluebird.min.js" nomodule></script>
 
     <!-- Axios -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
@@ -108,7 +107,8 @@
         crossorigin="anonymous"></script>
 
     <!-- OrganizationEditor -->
-    <script src="organizationeditor.js" defer></script>
+    <script src="organizationeditor.js" type="module"></script>
+    <script src="organizationeditor.es5.js" nomodule></script>
 
 </body>
 

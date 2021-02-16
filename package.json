@@ -1,15 +1,17 @@
 {
   "name": "organization-editor",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Dynamics 365 stores configuration values for the environment in the `Organization` entity. These fields are updated when changes are made in the `System > Administration > System Settings` window, although not all settings are present here",
   "main": "./src/scripts/organizationeditor.js",
   "scripts": {
-    "clean:dist": "rimraf ./dist/*",
-    "clean:temp": "rimraf ./temp/*",
-    "prebuild": "npm-run-all clean:*",
-    "build:ts": "webpack --mode=production",
+    "prebuild:check-node-version": "check-node-version --node '>= 15'",
+    "prebuild:clean-dist": "rimraf ./dist/*",
+    "prebuild:clean-temp": "rimraf ./temp/*",
+    "prebuild": "npm-run-all prebuild:*",
+    "build:ts": "webpack",
+    "build:ts-ie11": "webpack --config webpack.ie11.config",
     "build:html": "copyfiles --all --flat ./src/**/*.html temp",
-    "build:scss": "node-sass --output-style nested ./src/organizationeditor.scss ./temp/organizationeditor.css",
+    "build:scss": "sass ./src/organizationeditor.scss ./temp/organizationeditor.css",
     "build": "npm-run-all build:*"
   },
   "repository": {
@@ -25,10 +27,11 @@
   "homepage": "https://github.com/cathalnoonan/d365-organization-editor#readme",
   "devDependencies": {
     "@types/xrm": "^9.0.33",
+    "check-node-version": "^4.1.0",
     "copyfiles": "^2.4.1",
-    "node-sass": "^5.0.0",
     "npm-run-all": "^4.1.5",
     "rimraf": "^3.0.2",
+    "sass": "^1.32.7",
     "ts-loader": "^8.0.14",
     "typescript": "^4.1.3",
     "webpack": "^5.22.0",

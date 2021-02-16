@@ -11,6 +11,7 @@
         "logicalname",
         "lookupattributemetadata",
         "metadataid",
+        "nomodule",
         "onclickedit",
         "onclickmodalsave",
         "onfieldchange",

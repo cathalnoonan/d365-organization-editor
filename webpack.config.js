@@ -1,13 +1,14 @@
 const path = require('path')
 
-module.exports = (env, argv) => ({
-    target: ['web', 'es5'],
+module.exports = {
+    mode: 'production',
+    target: ['web', 'es2015'],
     devtool: 'source-map',
     entry: path.resolve(__dirname, 'src', 'index.ts'),
     output: {
         path: path.resolve(__dirname, 'temp'),
         filename: 'organizationeditor.js',
-        sourceMapFilename: 'organizationeditor-js.map',
+        sourceMapFilename: 'organizationeditor.js.map',
     },
     module: {
         rules: [
@@ -15,6 +16,9 @@ module.exports = (env, argv) => ({
                 test: /\.ts$/,
                 exclude: /node_modules/,
                 loader: 'ts-loader',
+                options: {
+                    configFile: 'tsconfig.json',
+                },
             }
         ]
     },
@@ -25,4 +29,4 @@ module.exports = (env, argv) => ({
     externals: {
         axios: 'axios',
     }
-})
+}

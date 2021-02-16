@@ -8,14 +8,14 @@ $solutionName = $solutionManifest.UniqueName;
 $solutionVersion = $solutionManifest.Version -replace "[.]", "_";
 
 # Build unmanaged
-Write-Output "Packing unmanaged solution"
+Write-Output "Packing managed solution"
 Tools/CoreTools/SolutionPackager.exe `
     /action: Pack `
-    /zipfile: ".\dist\$($solutionName)_$($solutionVersion).zip " `
+    /zipfile: ".\dist\$($solutionName)_$($solutionVersion)_managed.zip " `
     /folder: .\solution `
     /errorlevel: Warning `
     /nologo `
     /map: .\solution\map.xml `
-    /PackageType: Both
+    /PackageType: Managed
 
 Write-Output "`nPack complete`n"

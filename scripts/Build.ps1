@@ -5,6 +5,9 @@ if (!(Test-Path "node_modules")) {
 
 # Build project
 npm run build
+if ($LASTEXITCODE -ne 0) {
+    exit 1
+}
 
 # Restore solution packager
 if (![System.IO.File]::Exists(".\Tools\CoreTools\SolutionPackager.exe")) {

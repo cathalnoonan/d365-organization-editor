@@ -44,6 +44,7 @@ Tested in:
 - IE 11 (windows 10)
   - No specific issues
 
+---
 
 ## Building the Solution
 _Building the solution assumes that NODE/NPM is installed and the user has permissions to execute the batch / powershell scripts_
@@ -55,20 +56,3 @@ This will call `.\scripts\Build.ps1`, which will
 - Build and bundle the Typescript files for the browser (to `.\temp` folder)
 - Download the SolutionPackager
 - Build an unmanaged and managed solution (to `.\dist` folder)
-
-
-## Building the code
-_Building the project assumes that NODE/NPM is installed_
-
-### Commands required to build the code
-Install the packages to the node_modules folder (this will only be required if a new release is made)
-> npm install
-
-Then build the code
-> npm run build
-
-After the code has been built, the JS file will be placed in the /temp folder
-
-These files can be copy/pasted into the WebResource using your method of choice
-- OOB WebResource editor
-- XRM Toolbox: WebResource Manager

@@ -1,9 +1,10 @@
-$header-color: white;
-$header-padding: 3.25rem;
+$header-color: rgb(239, 239, 239);
+$header-padding: 3.6rem;
 $header-border-color: #444;
 $row-v-padding: 0.8rem;
 $row-border-color: #ccc;
-$scollbar-width: 8px;
+$font-size: 1rem;
+$button-width: 4rem;
 
 body {
     overflow-y: visible;
@@ -13,7 +14,7 @@ body {
     position: fixed;
     width: 100%;
     font-weight: bold;
-    font-size: 1.05rem;
+    font-size: $font-size;
     background-color: $header-color;
     z-index: 1;
     border-bottom: 1px solid $header-border-color;
@@ -26,6 +27,7 @@ body {
     height: 100%;
     overflow-y: visible;
     padding-top: $header-padding;
+    font-size: $font-size;
 
     .d-flex {
         border-bottom: 1px solid $row-border-color;
@@ -34,36 +36,17 @@ body {
 
         div {
             word-break: break-word;
+            word-wrap: break-word;
         }
     }
 }
 
 .btn-w {
-    width: 4rem;
+    width: $button-width;
 }
 
 body.modal-open{
     #t-header {
-        width: calc(100% - #{$scollbar-width});
+        width: calc(100% - 17px);
     }
-}
-
-/* width */
-::-webkit-scrollbar {
-    width: $scollbar-width;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-    background: #f1f1f1;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-    background: #888;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-    background: #555;
 }

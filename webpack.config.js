@@ -1,10 +1,9 @@
 const path = require('path')
 
 module.exports = {
-    //mode: 'production',
-    mode: 'development',
+    mode: 'production',
     target: ['web', 'es2015'],
-    devtool: 'inline-source-map',
+    devtool: 'source-map',
     entry: path.resolve(__dirname, 'src', 'index.ts'),
     output: {
         path: path.resolve(__dirname, 'temp'),

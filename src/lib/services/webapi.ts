@@ -1,5 +1,4 @@
-import Axios, { AxiosResponse } from 'axios'
-
+import { xrmHttpRequest } from './'
 import { EntityMetadata, EntityReference, PicklistAttributeMetadata, PicklistItem, TwoOptionAttributeMetadata, TwoOptionItem } from '../models'
 import { Dictionary } from '../utilities'
 
@@ -34,7 +33,9 @@ export class WebApi {
 
         const url = `${this.getApiDataUrl()}/EntityDefinitions(LogicalName='${entityName}')?$expand=Attributes`
 
-        const response = await Axios.get<EntityMetadata>(url)
+        const response = await xrmHttpRequest<EntityMetadata>('GET', url)
+        if (!response.success) throw response
+
         const json = response.data
         return this.entityMetadata[entityName] = json // Memoize, return
     }
@@ -47,7 +48,9 @@ export class WebApi {
 
         const url = `${this.getApiDataUrl()}/EntityDefinitions(LogicalName='${entityName}')?$select=EntitySetName`
 
-        const response = await Axios.get<EntityMetadata>(url)
+        const response = await xrmHttpRequest<EntityMetadata>('GET', url)
+        if (!response.success) throw response
+
         const json = response.data
         return this.entitySets[entityName] = json.EntitySetName // Memoize, return
     }
@@ -60,7 +63,9 @@ export class WebApi {
 
         const url = `${this.getApiDataUrl()}/EntityDefinitions(LogicalName='${entityName}')/Attributes(${metadataId})/Microsoft.Dynamics.CRM.PicklistAttributeMetadata?$select=LogicalName&$expand=OptionSet,GlobalOptionSet`
 
-        const response = await Axios.get<PicklistAttributeMetadata>(url)
+        const response = await xrmHttpRequest<PicklistAttributeMetadata>('GET', url)
+        if (!response.success) throw response
+
         const json = response.data
         const options = this.resolvePicklist(json)
         return this.picklistOptions[metadataId] = options // Memoize, return
@@ -81,7 +86,8 @@ export class WebApi {
 
         const url = `${this.getApiDataUrl()}/EntityDefinitions(LogicalName='${entityName}')/Attributes(${metadataId})/Microsoft.Dynamics.CRM.BooleanAttributeMetadata?$select=LogicalName&$expand=OptionSet,GlobalOptionSet`
 
-        const response = await Axios.get<TwoOptionAttributeMetadata>(url)
+        const response = await xrmHttpRequest<TwoOptionAttributeMetadata>('GET', url)
+        if (!response.success) throw response
 
         const json = response.data
         const options = this.resolveOptionSet(json)
@@ -109,24 +115,14 @@ export class WebApi {
             url += options
         }
 
-        const response = await Axios.get<RetrieveMultipleResponse>(url, {
-            headers: {
-                'OData-MaxVersion': '4.0',
-                'OData-Version': '4.0',
-                'Accept': 'application/json',
-                'Content-Type': 'application/json; charset=utf-8',
+        const response = await xrmHttpRequest<RetrieveMultipleResponse>('GET', url, {
+            additionalHeaders: {
                 'Prefer': 'odata.include-annotations=*'
             }
         })
+        if (!response.success) throw response
 
-        const success = this.isSuccess(response)
-
-        if (success) {
-            return response.data
-        }
-        throw {
-            message: response.statusText
-        }
+        return response.data
     }
 
     public async retrieveFirst(entityLogicalName: string, options?: string): Promise<any> {
@@ -145,11 +141,13 @@ export class WebApi {
 
         let url = `${this.getApiDataUrl()}/${EntitySetName}?$select=${PrimaryIdAttribute},${PrimaryNameAttribute}&$orderby=${PrimaryNameAttribute}`
         while (true) {
-            const response = await Axios.get<RetrieveMultipleResponse>(url)
+            const response = await xrmHttpRequest<RetrieveMultipleResponse>('GET', url)
+            if (!response.success) throw response
+
             const { data } = response
             const newReferences = data.value.map(x => ({ entityName, id: x[PrimaryIdAttribute], name: x[PrimaryNameAttribute] }))
             references.push(...newReferences)
-            
+
             if (data["@odata.nextLink"]) {
                 url = data["@odata.nextLink"]
             } else {
@@ -161,9 +159,7 @@ export class WebApi {
     }
 
     public async updateRecord(entityLogicalName: string, id: string, data: Dictionary<any>): Promise<any> {
-
         const metadata = await this.getEntityMetadata(entityLogicalName)
-
         id = id.replace('{', '').replace('}', '')
         const primaryIdAttribute = metadata.PrimaryIdAttribute
         const entitySetName = metadata.EntitySetName
@@ -172,25 +168,16 @@ export class WebApi {
             data[primaryIdAttribute] = id
         }
 
-        const response = await Axios(url, {
-            method: 'PATCH',
-            data: data,
-            headers: {
-                'OData-MaxVersion': '4.0',
-                'OData-Version': '4.0',
-                'Accept': 'application/json',
+        const response = await xrmHttpRequest('PATCH', url, {
+            data,
+            additionalHeaders: {
                 'Content-Type': 'application/json; charset=utf-8',
-            },
+                'Prefer': 'return=representation'
+            }
         })
+        if (!response.success) throw response
 
-        const success = this.isSuccess(response)
-
-        if (success) {
-            return response.data
-        }
-        throw {
-            message: response.statusText
-        }
+        return response.data
     }
 
     public async unlinkRecord(entityLogicalName: string, id: string, attributeName: string): Promise<void> {
@@ -199,50 +186,31 @@ export class WebApi {
         const entitySetName = await this.getEntitySetName(entityLogicalName)
         const url = `${this.getApiDataUrl()}${entitySetName}(${id})/${attributeName}/$ref`
 
-        const response = await Axios(url, {
-            method: 'DELETE',
-
-            headers: {
-                'OData-MaxVersion': '4.0',
-                'OData-Version': '4.0',
-                'Accept': 'application/json',
+        const response = await xrmHttpRequest('DELETE', url, {
+            additionalHeaders: {
                 'Content-Type': 'application/json; charset=utf-8',
-            },
-        })
-
-        const success = this.isSuccess(response)
-
-        if (!success) {
-            throw {
-                message: response.statusText
+                'Prefer': 'return=representation'
             }
-        }
+        })
+        if (!response.success) throw response
+
+        // else: success
     }
 
     public async publishCustomizations(): Promise<void> {
         return new Promise(async (resolve, reject) => {
             const url = `${this.getApiDataUrl()}/PublishAllXml`
 
-            const response = await Axios.post(url, null, {
-                headers: {
-                    'OData-MaxVersion': '4.0',
-                    'OData-Version': '4.0',
-                    'Accept': 'application/json',
+            const response = await xrmHttpRequest('POST', url, {
+                additionalHeaders: {
                     'Content-Type': 'application/json; charset=utf-8',
                 }
             })
-            
-            if (this.isSuccess(response)) 
-                return resolve()
-            else 
-                return reject()
-        })
-    }
 
-    private isSuccess(response: AxiosResponse): boolean {
-        // Axios
-        const { status } = response
-        return status >= 200 && status < 300
+            if (!response.success) return reject()
+
+            return resolve()
+        })
     }
 }
 

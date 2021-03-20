@@ -1,4 +1,3 @@
-import { AxiosResponse } from 'axios'
 import { buildTable } from './dom'
 import { EntityMetadata, AttributeMetadata } from './models'
 import { WebApi, WebApiVersion } from './services'
@@ -126,12 +125,10 @@ export class OrganizationEditor {
 
             this.alerts.closeProgressIndicator()
 
-            if (exc.response) {
-                const response = <AxiosResponse>(exc.response)
-
+            if (exc.message) {
                 this.alerts.openErrorDialog({
-                    message: <string>(response?.data?.error?.message) ?? 'Unknown error - download the log file for more information',
-                    errorCode: response.status,
+                    message: <string>(exc.message) ?? 'Unknown error - download the log file for more information',
+                    errorCode: exc.status,
                     details: JSON.stringify(exc),
                 })
 

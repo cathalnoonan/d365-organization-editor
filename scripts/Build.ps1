@@ -1,10 +1,12 @@
-# Restore node_modules
-if (!(Test-Path "node_modules")) {
-    npm ci
+# Check if yarn is installed
+yarn
+if ($LASTEXITCODE -ne 0) {
+    npm install -g yarn
+    yarn
 }
 
 # Build project
-npm run build
+yarn build
 if ($LASTEXITCODE -ne 0) {
     exit 1
 }

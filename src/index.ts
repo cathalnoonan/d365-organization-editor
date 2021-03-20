@@ -1,5 +1,7 @@
 import { OrganizationEditor } from './lib'
 
+import './polyfills'
+
 (async function () {
     // Get Xrm object
     // Might be in another window

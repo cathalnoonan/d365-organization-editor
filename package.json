@@ -1,6 +1,6 @@
 {
   "name": "organization-editor",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "Dynamics 365 stores configuration values for the environment in the `Organization` entity. These fields are updated when changes are made in the `System > Administration > System Settings` window, although not all settings are present here",
   "main": "./src/scripts/organizationeditor.js",
   "scripts": {

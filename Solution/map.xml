@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>  
 <Mapping>  
-    <FileToFile map="WebResources\cn_\organizationeditor\organizationeditor.html"       to="..\temp\organizationeditor.html" />  
-    <FileToFile map="WebResources\cn_\organizationeditor\organizationeditor.js"         to="..\temp\organizationeditor.js" />  
-    <FileToFile map="WebResources\cn_\organizationeditor\organizationeditor.js.map"     to="..\temp\organizationeditor.js.map" />  
-    <FileToFile map="WebResources\cn_\organizationeditor\organizationeditor.es5.js"     to="..\temp\organizationeditor.es5.js" />  
-    <FileToFile map="WebResources\cn_\organizationeditor\organizationeditor.es5.js.map" to="..\temp\organizationeditor.es5.js.map" />  
-    <FileToFile map="WebResources\cn_\organizationeditor\organizationeditor.css"        to="..\temp\organizationeditor.css" />  
+    <Folder map="WebResources\cn_\organizationeditor" to="..\temp\" />
 </Mapping>  

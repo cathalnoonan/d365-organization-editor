@@ -1,7 +1,6 @@
 import { OrganizationAttributeUpdateOptions } from '..'
 import { AttributeMetadata } from '../models'
 import { WebApi } from '../services'
-import { Dictionary } from '../utilities'
 import { onClickEdit } from './onclickedit'
 
 export function buildTable(options: BuildTableOptions): void {
@@ -55,7 +54,7 @@ export function buildTable(options: BuildTableOptions): void {
 }
 
 export interface BuildTableOptions {
-    attributes: Dictionary<AttributeMetadata>
+    attributes: Record<string, AttributeMetadata>
     entity: any
     webApi: WebApi
     getAttributeValue: (attribute: AttributeMetadata) => any

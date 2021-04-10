@@ -1,7 +1,7 @@
 import { buildTable } from './dom'
 import { EntityMetadata, AttributeMetadata } from './models'
 import { WebApi, WebApiVersion } from './services'
-import { Alerts, Dictionary } from './utilities'
+import { Alerts } from './utilities'
 
 export class OrganizationEditor {
     private readonly alerts: Alerts
@@ -9,8 +9,8 @@ export class OrganizationEditor {
 
     // @ts-ignore -- this will be assigned in `init()`
     private entityMetadata: EntityMetadata
-    private attributeMetadata: Dictionary<AttributeMetadata> = {}
-    private entity: Dictionary<any> = {}
+    private attributeMetadata: Record<string, AttributeMetadata> = {}
+    private entity: Record<string, any> = {}
 
     constructor(options: OrganizationEditorOptions) {
         const { xrm, apiVersion, } = options

@@ -1,7 +1,6 @@
 import { OrganizationAttributeUpdateOptions } from '..'
 import { AttributeMetadata, LookupAttributeMetadata, PicklistAttributeMetadata, TwoOptionAttributeMetadata } from '../models'
 import { WebApi } from '../services'
-import { Dictionary } from '../utilities'
 
 export async function buildModalInput(options: BuildModalInputOptions): Promise<ModalInput> {
     const { attribute } = options
@@ -82,7 +81,7 @@ async function buildTwoOptionInput(options: BuildTwoInputOptions): Promise<Modal
     }
 
     const getPatchUpdate = async (): Promise<OrganizationAttributeUpdateOptions> => {
-        const data: Dictionary<any> = {}
+        const data: Record<string, any> = {}
         data[attribute.LogicalName] = JSON.parse(select.value)
         return {
             type: 'update',
@@ -107,7 +106,7 @@ async function buildIntegerInput(options: BuildIntegerInputOptions): Promise<Mod
     input.value = value?.toString() ?? ''
 
     const getPatchUpdate = async (): Promise<OrganizationAttributeUpdateOptions> => {
-        const data: Dictionary<any> = {}
+        const data: Record<string, any> = {}
 
         if (!isNaN(parseInt(input.value))) {
             data[attribute.LogicalName] = parseInt(input.value)
@@ -153,7 +152,7 @@ async function buildPicklistOptionInput(options: BuildPicklistOptions): Promise<
     }
 
     const getPatchUpdate = async (): Promise<OrganizationAttributeUpdateOptions> => {
-        const data: Dictionary<any> = {}
+        const data: Record<string, any> = {}
         data[attribute.LogicalName] = select.value
         return {
             type: 'update',
@@ -198,7 +197,7 @@ async function buildLookupInput(options: BuildLookupOptions): Promise<ModalInput
     // Populate select:Id (if value assigned already)
     if (value && value.entityType) {
         const entityReferences = await webApi.getAllEntityReferences(value.entityType)
-        
+
         entityReferences.forEach(entityReference => {
             selectId.appendChild(createHtmlOption(entityReference.name, entityReference.id))
         })
@@ -217,7 +216,7 @@ async function buildLookupInput(options: BuildLookupOptions): Promise<ModalInput
 
         if (logicalName !== '') {
             const entityReferences = await webApi.getAllEntityReferences(logicalName)
-            
+
             entityReferences.forEach(entityReference => {
                 selectId.appendChild(createHtmlOption(entityReference.name, entityReference.id))
             })
@@ -229,7 +228,7 @@ async function buildLookupInput(options: BuildLookupOptions): Promise<ModalInput
         const logicalName = selectLogicalName.value
 
         if (id && logicalName) {
-            const data: Dictionary<any> = {}
+            const data: Record<string, any> = {}
             const entitySetName = await webApi.getEntitySetName(logicalName)
             data[`${attribute.LogicalName}@odata.bind`] = `/${entitySetName}(${id})`
             return {
@@ -268,7 +267,7 @@ async function buildTextAreaInput(options: BuildTextAreaOptions): Promise<ModalI
     textarea.value = value || ''
 
     const getPatchUpdate = async (): Promise<OrganizationAttributeUpdateOptions> => {
-        const data: Dictionary<any> = {}
+        const data: Record<string, any> = {}
         data[attribute.LogicalName] = textarea.value
         return {
             type: 'update',

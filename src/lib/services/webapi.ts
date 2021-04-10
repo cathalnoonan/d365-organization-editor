@@ -1,15 +1,14 @@
 import { xrmHttpRequest } from './'
 import { EntityMetadata, EntityReference, PicklistAttributeMetadata, PicklistItem, TwoOptionAttributeMetadata, TwoOptionItem } from '../models'
-import { Dictionary } from '../utilities'
 
 export class WebApi {
     private readonly xrm: Xrm.XrmStatic
     private readonly apiVersion: string
     private readonly globalContext: Xrm.GlobalContext
-    private readonly entityMetadata: Dictionary<EntityMetadata> = {}
-    private readonly entitySets: Dictionary<string> = {}
-    private readonly picklistOptions: Dictionary<PicklistItem[]> = {}
-    private readonly booleanOptions: Dictionary<[TwoOptionItem, TwoOptionItem]> = {}
+    private readonly entityMetadata: Record<string, EntityMetadata> = {}
+    private readonly entitySets: Record<string, string> = {}
+    private readonly picklistOptions: Record<string, PicklistItem[]> = {}
+    private readonly booleanOptions: Record<string, [TwoOptionItem, TwoOptionItem]> = {}
 
     constructor(options: WebApiOptions) {
         this.xrm = options.xrm
@@ -148,8 +147,8 @@ export class WebApi {
             const newReferences = data.value.map(x => ({ entityName, id: x[PrimaryIdAttribute], name: x[PrimaryNameAttribute] }))
             references.push(...newReferences)
 
-            if (data["@odata.nextLink"]) {
-                url = data["@odata.nextLink"]
+            if (data['@odata.nextLink']) {
+                url = data['@odata.nextLink']
             } else {
                 break
             }
@@ -158,7 +157,7 @@ export class WebApi {
         return references
     }
 
-    public async updateRecord(entityLogicalName: string, id: string, data: Dictionary<any>): Promise<any> {
+    public async updateRecord(entityLogicalName: string, id: string, data: Record<string, any>): Promise<any> {
         const metadata = await this.getEntityMetadata(entityLogicalName)
         id = id.replace('{', '').replace('}', '')
         const primaryIdAttribute = metadata.PrimaryIdAttribute
@@ -223,5 +222,5 @@ export interface WebApiOptions {
 
 export interface RetrieveMultipleResponse {
     value: any[]
-    "@odata.nextLink"?: string
+    '@odata.nextLink'?: string
 }

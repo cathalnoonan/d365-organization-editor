@@ -1,11 +1,9 @@
 import { OrganizationEditor } from './lib'
 
-import './polyfills'
-
 (async function () {
     // Get Xrm object
     // Might be in another window
-    const xrm = window!.Xrm ?? window!.opener!.Xrm ?? window!.parent!.Xrm
+    const xrm = window?.Xrm ?? window?.parent?.Xrm ?? window?.opener?.Xrm
 
     const organizationEditor = new OrganizationEditor({
         apiVersion: 'v9.0',

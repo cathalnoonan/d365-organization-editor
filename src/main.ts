@@ -1,6 +1,6 @@
-import { OrganizationEditor } from './lib'
+import { OrganizationEditor } from './organizationeditor'
 
-(async function () {
+;(async function () {
     // Get Xrm object
     // Might be in another window
     const xrm = window?.Xrm ?? window?.parent?.Xrm ?? window?.opener?.Xrm

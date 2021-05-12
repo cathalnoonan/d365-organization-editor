@@ -4,7 +4,7 @@ module.exports = {
     mode: 'production',
     target: ['web', 'es2015'],
     devtool: 'source-map',
-    entry: path.resolve(__dirname, 'src', 'index.ts'),
+    entry: path.resolve(__dirname, 'src', 'main.ts'),
     output: {
         path: path.resolve(__dirname, 'temp'),
         filename: 'organizationeditor.js',

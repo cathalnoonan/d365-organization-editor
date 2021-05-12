@@ -1,4 +1,4 @@
-import { OrganizationAttributeUpdateOptions } from '..'
+import { OrganizationAttributeUpdateOptions } from '../organizationeditor'
 import { AttributeMetadata } from '../models'
 import { WebApi } from '../services'
 import { onClickEdit } from './onclickedit'

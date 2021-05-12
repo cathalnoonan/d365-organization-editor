@@ -1,4 +1,4 @@
-import { OrganizationAttributeUpdateOptions } from '..'
+import { OrganizationAttributeUpdateOptions } from '../organizationeditor'
 import { AttributeMetadata, LookupAttributeMetadata, PicklistAttributeMetadata, TwoOptionAttributeMetadata } from '../models'
 import { WebApi } from '../services'
 

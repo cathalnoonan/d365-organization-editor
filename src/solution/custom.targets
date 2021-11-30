@@ -1,0 +1,70 @@
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- 
+    Task to copy files to obj/$(Configuration)/Metadata folder.
+    
+    As part of the build process, the solution expects the files to be in the folder along with the solution being built.
+    This takes place inside the obj/$(Configuration)/Metadata folder.
+  -->
+  <Target Name="CopyFilesToObjMetadataFolder" BeforeTargets="PrepareForBuild">
+    <Message Importance="High" Text="-------- CopyFilesToObjMetadataFolder: STARTED --------" />
+
+    <!-- Local properties to denote where the built files are, and where they should go to. -->
+    <PropertyGroup>
+      <_WebResourceMetadataDirectory>$(MSBuildThisFileDirectory)$(SolutionPackagerMetadataWorkingDirectory)/WebResources/cn_/organizationeditor/</_WebResourceMetadataDirectory>
+      <_WebResourceBuildDirectory>$(MSBuildThisFileDirectory)$(WebResourceBuildDirectory)</_WebResourceBuildDirectory>
+    </PropertyGroup>
+    <ItemGroup>
+      <_WebResourceBuildDirectoryFiles Include="$(_WebResourceBuildDirectory)/**/*" />
+    </ItemGroup>
+
+    <!-- Helpful messages for debugging -->
+    <Message Importance="High" Text="_WebResourceMetadataDirectory: $(_WebResourceMetadataDirectory)" />
+    <Message Importance="High" Text="_WebResourceBuildDirectory: $(_WebResourceBuildDirectory)" />
+
+    <!-- Make directory if not exists -->
+    <MakeDir Directories="$(_WebResourceMetadataDirectory)" 
+             Condition="!Exists('$(_WebResourceMetadataDirectory)')" />
+
+    <!-- Copy files from one directory to another -->
+    <Copy SourceFiles="@(_WebResourceBuildDirectoryFiles)" 
+          DestinationFiles="@(_WebResourceBuildDirectoryFiles -> '$(_WebResourceMetadataDirectory)%(RecursiveDir)%(FileName)%(Extension)')" />
+      
+    <Message Importance="High" Text="-------- CopyFilesToObjMetadataFolder: FINISHED --------" />
+  </Target>
+  
+
+  <!-- 
+    Task to find the solution version number from ./src/Other/Solution.xml.
+
+    We will use this in the zip name of the solution(s) being built.
+  -->
+  <Target Name="GetSolutionVersionNumber" BeforeTargets="PrepareForBuild">
+    <Message Importance="High" Text="-------- GetSolutionVersionNumber: STARTED --------" />
+
+    <!-- Local properties to denote where we are looking for the solution version number, and what the version number is. -->
+    <PropertyGroup>
+      <_SolutionXmlFilePath>$(MSBuildThisFileDirectory)$(SolutionRootPath)/Other/Solution.xml</_SolutionXmlFilePath>
+      <_SolutionVersionXPath>/ImportExportXml/SolutionManifest/Version/text()</_SolutionVersionXPath>
+    </PropertyGroup>
+    <XmlPeek XmlInputPath="$(_SolutionXmlFilePath)" Query="$(_SolutionVersionXPath)"
+             Namespaces=" &lt;Namespace Prefix='s' Uri='http://www.w3.org/2001/XMLSchema-instance' /&gt;">
+      <Output TaskParameter="Result" ItemName="_TempSolutionVersionNumber" />
+    </XmlPeek>
+    <PropertyGroup>
+      <_SolutionVersionNumber>@(_TempSolutionVersionNumber)</_SolutionVersionNumber>
+      <_SolutionVersionNumberFormatted>$([System.Text.RegularExpressions.Regex]::Replace($(_SolutionVersionNumber),"\.", "_"))</_SolutionVersionNumberFormatted>
+      <SolutionPackageZipFilePath>$(SolutionPackageZipFilePath.Replace(".zip","_$(_SolutionVersionNumberFormatted).zip"))</SolutionPackageZipFilePath>
+    </PropertyGroup>
+    
+    <!-- Helpful messages for debugging -->
+    <Message Importance="High" Text="_SolutionXmlFilePath: $(_SolutionXmlFilePath)"/>
+    <Message Importance="High" Text="_SolutionVersionXPath: $(_SolutionVersionXPath)"/>
+    <Message Importance="High" Text="_SolutionVersionNumber: @(_SolutionVersionNumber)"/>
+    <Message Importance="High" Text="_SolutionVersionNumberFormatted: $(_SolutionVersionNumberFormatted)"/>
+    <Message Importance="High" Text="SolutionPackageZipFilePath: $(SolutionPackageZipFilePath)"/>
+    
+    <Message Importance="High" Text="-------- GetSolutionVersionNumber: FINISHED --------" />
+  </Target>
+
+</Project>

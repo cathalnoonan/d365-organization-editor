@@ -1,4 +1,4 @@
-import { xrmHttpRequest } from './'
+import { xrmHttpRequest } from '.'
 import { EntityMetadata, EntityReference, PicklistAttributeMetadata, PicklistItem, TwoOptionAttributeMetadata, TwoOptionItem } from '../models'
 
 export class WebApi {

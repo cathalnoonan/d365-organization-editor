@@ -8,8 +8,8 @@
     "prebuild": "npm-run-all prebuild:*",
     "build:ts": "webpack",
     "build:ts-ie11": "webpack --config webpack.ie11.config",
-    "build:html": "copyfiles --all --flat ./src/**/*.html temp",
-    "build:scss": "sass ./src/organizationeditor.scss ./temp/organizationeditor.css",
+    "build:html": "copyfiles --all --flat ./project/**/*.html temp",
+    "build:scss": "sass ./project/organizationeditor.scss ./temp/organizationeditor.css",
     "build": "npm-run-all build:*"
   },
   "repository": {

@@ -1,3 +1,5 @@
 @echo off
 
-call powershell -command "& { . .\scripts\Build.ps1 }"
+npm --prefix .\src install
+npm --prefix .\src run build
+dotnet build .\src\solution

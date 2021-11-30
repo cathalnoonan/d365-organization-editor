@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PowerAppsTargetsPath>$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\PowerApps</PowerAppsTargetsPath>  
+  </PropertyGroup>
+  
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" />
+  <Import Project="$(PowerAppsTargetsPath)\Microsoft.PowerApps.VisualStudio.Solution.props" Condition="Exists('$(PowerAppsTargetsPath)\Microsoft.PowerApps.VisualStudio.Solution.props')"/>
+
+  <PropertyGroup>
+    <ProjectGuid>89d41102-adec-4685-a106-e94f2003d19f</ProjectGuid>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <!--Remove TargetFramework when this is available in 16.1-->
+    <TargetFramework>net462</TargetFramework>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+  </PropertyGroup>
+  
+  <!-- Solution Packager overrides, un-comment to use: SolutionPackagerType (Managed, Unmanaged, Both) -->
+  <PropertyGroup>
+    <SolutionRootPath>src</SolutionRootPath>
+    <SolutionPackageType>Both</SolutionPackageType>
+    
+    <!-- Output the zips to the /dist folder at the root of the repo. -->
+    <SolutionPackageZipFilePath>$(MSBuildThisFileDirectory)..\..\dist\$(MSBuildProjectName).zip</SolutionPackageZipFilePath>
+
+
+    <!-- Map file isn't working for some reason, workaround implemented in custom.targets instead -->
+    <!-- <SolutionPackageMapFilePath>src/map.xml</SolutionPackageMapFilePath> -->
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <WebResourceBuildDirectory>../temp</WebResourceBuildDirectory>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Microsoft.PowerApps.MSBuild.Solution" Version="1.*"/>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" PrivateAssets="All" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ExcludeDirectories Include="$(MSBuildThisFileDirectory)\.gitignore"/>
+    <ExcludeDirectories Include="$(MSBuildThisFileDirectory)\bin\**"/>
+    <ExcludeDirectories Include="$(MSBuildThisFileDirectory)\obj\**"/>
+    <ExcludeDirectories Include="$(MSBuildThisFileDirectory)\*.cdsproj"/>
+    <ExcludeDirectories Include="$(MSBuildThisFileDirectory)\*.cdsproj.user"/>
+    <ExcludeDirectories Include="$(MSBuildThisFileDirectory)\*.sln"/>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)\**" Exclude="@(ExcludeDirectories)" />
+    <Content Include="$(SolutionPackageZipFilePath)">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <Import Project="$(MSBuildThisFileDirectory)custom.targets"/>
+
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
+  <Import Project="$(PowerAppsTargetsPath)\Microsoft.PowerApps.VisualStudio.Solution.targets" Condition="Exists('$(PowerAppsTargetsPath)\Microsoft.PowerApps.VisualStudio.Solution.targets')"/>
+
+</Project>

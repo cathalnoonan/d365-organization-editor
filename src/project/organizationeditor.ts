@@ -121,19 +121,18 @@ export class OrganizationEditor {
 
             this.alerts.closeProgressIndicator()
 
-        } catch (exc) {
+        } catch (exc: any) {
 
             this.alerts.closeProgressIndicator()
 
-            if (exc.message) {
+            if (exc && exc.message) {
                 this.alerts.openErrorDialog({
                     message: <string>(exc.message) ?? 'Unknown error - download the log file for more information',
                     errorCode: exc.status,
-                    details: JSON.stringify(exc),
+                    details: JSON.stringify(exc, null, 2),
                 })
-
             } else {
-                this.alerts.openErrorDialog({ message: 'Error saving the record', details: JSON.stringify(exc) })
+                this.alerts.openErrorDialog({ message: 'Error saving the record', details: JSON.stringify(exc, null, 2) })
             }
         }
 

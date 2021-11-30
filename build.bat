@@ -1,5 +1,5 @@
 @echo off
 
-npm --prefix .\src install
-npm --prefix .\src run build
-dotnet build .\src\solution
+call npm --prefix .\src install
+call npm --prefix .\src run build
+call dotnet build .\src\solution

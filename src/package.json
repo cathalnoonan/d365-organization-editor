@@ -1,6 +1,6 @@
 {
   "name": "organization-editor",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "Dynamics 365 stores configuration values for the environment in the `Organization` entity. These fields are updated when changes are made in the `System > Administration > System Settings` window, although not all settings are present here",
   "main": "./src/main.ts",
   "scripts": {
@@ -10,7 +10,9 @@
     "build:ts-ie11": "webpack --config webpack.ie11.config",
     "build:html": "copyfiles --all --flat ./project/**/*.html temp",
     "build:scss": "sass ./project/organizationeditor.scss ./temp/organizationeditor.css",
-    "build": "npm-run-all build:*"
+    "build": "npm-run-all build:*",
+    "watch": "webpack --watch",
+    "watch:ie11": "webpack --config webpack.ie11.config --watch"
   },
   "repository": {
     "type": "git",

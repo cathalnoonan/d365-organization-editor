@@ -33,7 +33,7 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
-          cache-dependency-path: control/package-lock.json
+          cache-dependency-path: src/package-lock.json
       - name: Setup dotnet
         uses: actions/setup-dotnet@v2
         with:

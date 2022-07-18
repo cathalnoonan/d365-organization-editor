@@ -1,5 +1,9 @@
 @echo off
 
-call npm --prefix .\src install
-call npm --prefix .\src run build
+cd .\src
+call npm .\src install --no-audit --ignore-scripts --no-fund
+call npm audit --prod
+call npm run build
+cd ..\
+
 call dotnet build .\src\solution

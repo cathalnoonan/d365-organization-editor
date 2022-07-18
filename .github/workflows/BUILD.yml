@@ -1,0 +1,71 @@
+name: Build
+
+on:
+  workflow_dispatch:
+    branches: [ master ]
+  push:
+    branches:
+    - master
+    - features/*
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        # Specify the operating system(s) that the build will run on
+        os: 
+        - ubuntu-latest
+        #- windows-latest
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      # Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Configure environment
+      - name: Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+          cache-dependency-path: control/package-lock.json
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 6.0.x
+
+      # Restore dependencies
+      # - https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md
+      - run: npm install --no-audit --ignore-scripts --no-fund
+        working-directory: ./src
+      - run: npm audit --prod
+        working-directory: ./src
+      
+      # Build javascript/html/css
+      - run: npm run build
+        working-directory: ./src
+
+      # Build solution
+      # - https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-environment-variables
+      - run: dotnet build ./src/solution
+        env:
+          DOTNET_ROLL_FORWARD: Major
+          DOTNET_NOLOGO: 1
+          DOTNET_CLI_TELEMETRY_OPTOUT: 1
+          DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+
+      # Prepare artifact(s)
+      # - Create an arbitrary file in the root of the dist directory.
+      # - This is to try and make it clearer that there is a nested zip inside the artifact zip file.
+      - run: echo "${{ github.server_url }}/${{ github.repository }}" > ./dist/repo-url.txt
+      - name: 'Upload artifact'
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ github.event.repository.name }}__extract_this_zip
+          path: ./dist/*
+          retention-days: 15

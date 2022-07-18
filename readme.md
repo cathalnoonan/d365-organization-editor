@@ -1,4 +1,7 @@
 # D365 Organization Editor
+
+[![Build](https://github.com/cathalnoonan/d365-organization-editor/actions/workflows/BUILD.yml/badge.svg)](https://github.com/cathalnoonan/d365-organization-editor/actions/workflows/BUILD.yml)
+
 Dynamics 365 stores configuration values for the environment in the `Organization` entity. 
 These fields are updated when changes are made in the `System > Administration > System Settings` window, although not all settings are present here,
 
